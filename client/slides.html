@@ -3,11 +3,21 @@
 </head>
 
 <body>
-	<h1>List of slides</h1>
-	<div>
-		{{> slide_list}}
-	</div>
+  {{renderPage}}
 </body>
+
+<template name="view-edit">
+	<div id="main-pane">
+  	<h1>List of slides</h1>
+  	<div>
+  		{{> slide_list}}
+  	</div>
+	</div>
+</template>
+
+<template name="reveal">
+  <h1> This is where the reveal slides will go</h1>
+</template>
 
 <template name="slide_list">
     <div id="new-slide-box">
