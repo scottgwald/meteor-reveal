@@ -39,3 +39,25 @@ Template.slide_list.events(okCancelEvents(
   }
 ));
 
+Template.slide.events({
+  'click .destroy': function () {
+      Slides.remove(this._id);
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
