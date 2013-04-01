@@ -26,7 +26,14 @@ Meteor.startup(function () {
   }
 
   if (Config.find().count() === 0) {
-    Config.insert({});
+    Config.insert({n:5});
     // Config.insert({currentSlide: 0});
+  }
+});
+
+Meteor.methods({
+  revealReset: function () {
+    Config.remove({});
+    Config.insert({n:3});
   }
 });

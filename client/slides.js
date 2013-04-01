@@ -5,8 +5,41 @@ Config = new Meteor.Collection('config');
 Meteor.subscribe('slides');
 
 Meteor.subscribe('config', function onComplete() {
-  Session.set('configLoaded',true);
+  revealInit();
 })
+
+function revealInit() {
+  Session.set('configLoaded',false);
+  Session.set('configID', Config.findOne({})._id);
+  Session.set('configLoaded',true);  
+}
+
+function nextSlide() {
+  Config.update(Session.get('configID'),{$inc: {n:1}});
+  return currentSlide();
+}
+
+function previousSlide() {
+  Config.update(Session.get('configID'),{$inc: {n:-1}});
+  return currentSlide();
+}
+
+function currentSlide() {
+  if (! Session.get("configLoaded")) {
+    return -1;
+  }  else {
+    return Config.findOne(Session.get('configID')).n;
+  }
+}
+
+function revealReset() {
+  Session.set('configLoaded',false);
+  Meteor.call('revealReset', function (error, result) {
+    revealInit();    
+  });
+  // Config.remove({});
+  // Config.insert({n:3});
+}
 
 Template.slide_list.slides = function () {return Slides.find({})};
 Template.reveal.slides = function () {return Slides.find({})};
@@ -17,8 +50,12 @@ Template.reveal.slides = function () {return Slides.find({})};
 // }
 
 Template.current_slide.currentSlide = function () {
-  return Config.find().count();
+  return currentSlide();
 }
+
+// Template.current_slide.currentSlide = function () {
+//   return Config.find().count();
+// }
 
 // Template.current_slide.currentSlide = function () {
 //   // Session.setDefault("configID", Config.findOne({})._id);
@@ -67,7 +104,7 @@ Template.slide_list.events(okCancelEvents(
         text: text
       });
       evt.target.value = '';
-      Config.insert({});
+      // Config.insert({});
       // TODO: why doesn't this work?
       // Config.update({}, {$inc: {currentSlide: 1}});
     }
@@ -130,16 +167,9 @@ Template.reveal.rendered = function () {
 
     // Optional libraries used to extend on reveal.js
     dependencies: [
-    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-    { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-      // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
-      // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
-      ]
-    });
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } }
+    ]
+  });
 
   // Reveal.addEventListener('slidechanged', function(event) {
   //   Config.update({_id: Config.findOne({})._id}, {$set: {currentSlide: event.currentSlide}});
@@ -149,8 +179,14 @@ Template.reveal.rendered = function () {
   // Both of these work:
   // Reveal.slide(Config.find().count());
   // Reveal.slide($('#current-slide').attr('value'));
-  var currentSlide = Config.find().count();
-  window.location.hash = "#/"+currentSlide;
+  if (Session.get("configLoaded")) {
+    var curr = currentSlide();
+    console.log("setting hash to "+curr);
+    // var currentSlide = Config.find(Session.get("configID")).currentSlide;
+    window.location.hash = "#/"+curr;  
+  }
+  // var currentSlide = Config.find().count();
+  // window.location.hash = "#/"+currentSlide;
   console.log("Config loaded "+Session.get("configLoaded"));
 
   // $(window).bind('hashchange', function () {console.log("hash changed "+window.location.hash)});
