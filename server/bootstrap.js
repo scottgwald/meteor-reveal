@@ -1,10 +1,15 @@
 // Lists -- {name: String}
 Slides = new Meteor.Collection("slides");
+Config = new Meteor.Collection("config");
 
-// // Publish complete set of lists to all clients.
-// Meteor.publish('slides', function () {
-//   return Slides.find();
-// });
+// Publish complete set of lists to all clients.
+Meteor.publish('slides', function () {
+  return Slides.find();
+});
+
+Meteor.publish('config', function () {
+  return Config.find();
+})
 
 Meteor.startup(function () {
   if (Slides.find().count() === 0) {
@@ -18,5 +23,10 @@ Meteor.startup(function () {
     for (var i=0; i < data.length; i++) {
       Slides.insert({text: data[i].text});
     }
+  }
+
+  if (Config.find().count() === 0) {
+    Config.insert({});
+    // Config.insert({currentSlide: 0});
   }
 });

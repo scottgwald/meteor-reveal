@@ -1,0 +1,39 @@
+<template name="reveal">
+  {{> current_slide}}
+  <link rel="stylesheet" href="css/reveal.min.css">
+  <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+  <!-- For syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+  <script>
+  document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+  </script>
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+      <section>
+        <h1>Scott's StatusWear</h1>
+        <h3>by Scott Greenwald</h3>
+      </section>
+      {{#each slides}}
+        {{> reveal_slide}}
+      {{/each}}
+    </div>
+  </div>
+
+  {{bindHashChange}}
+</template>
+
+<template name="reveal_slide">
+  <section>
+    <h1>{{text}}</h1>
+  </section>
+</template>
+
+<template name="current_slide">
+    <input id="current-slide" type="hidden" value="{{currentSlide}}"> 
+</template>
+
