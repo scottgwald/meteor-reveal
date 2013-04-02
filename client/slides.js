@@ -32,6 +32,47 @@ function currentSlide() {
   }
 }
 
+function showSlides() {
+  console.log(Config.find({}));
+  return Config.find({});
+}
+
+function migrateToOrder() {
+  var cur = Slides.find({});
+  var i = 0;
+  cur.forEach( function(slide){
+    console.log("Slide "+slide._id+" has index "+slide.ind);
+    console.log("Updating "+slide._id+" to index "+i);
+    Slides.update(slide._id, {$set: {ind: i}});
+    i+=1;
+  })
+}
+
+function swapSlides(ind1, ind2) {
+  // should also check if there are more than one
+  var id1 = Slides.findOne({ind:ind1})._id;
+  var id2 = Slides.findOne({ind:ind2})._id;
+  // any way to do this actually-atomically??
+  Slides.update(id1,{$set: {ind:ind2}});
+  Slides.update(id2,{$set: {ind:ind1}});
+}
+
+// add checkrep function to assure no spaces or duplicate indices
+
+function moveSlide(sourceIndex, targetIndex) {
+  Meteor.call('moveSlide',sourceIndex,targetIndex);
+  var id = Slides.findOne({ind:sourceIndex})._id;
+  var movinUp = targetIndex > sourceIndex;
+  shift = movinUp ? -1 : 1;
+  lowerIndex = Math.min(sourceIndex, targetIndex);
+  lowerIndex += movinUp ? 1 : 0;
+  upperIndex = Math.max(sourceIndex, targetIndex);
+  upperIndex -= movinUp ? 0 : 1;
+  console.log("Shifting slides from "+lowerIndex+" to "+upperIndex+" by "+shift+" (with Meteor.call).");
+  // Slides.update({ind: {$gte: lowerIndex,$lte: upperIndex}}, {$inc: {ind:shift}},{multi:true});
+  // Slides.update(id, {$set: {ind:targetIndex}});
+}
+
 function revealReset() {
   Session.set('configLoaded',false);
   Meteor.call('revealReset', function (error, result) {
@@ -41,17 +82,37 @@ function revealReset() {
   // Config.insert({n:3});
 }
 
-Template.slide_list.slides = function () {return Slides.find({})};
-Template.reveal.slides = function () {return Slides.find({})};
+// the template is not reacting to my updates of the "ind field".
+// perhaps this is because the client it doesn't know about the sort order parameter, since
+// it lives on the server. Try adding it here.
+// hell yeah.
+Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})};
+Template.reveal.slides = function () {return Slides.find({}, {sort: {ind:1}})};
 
+//TODO: make this a toggle
 Template.slide.events({
   'click .slide': function () {
-    console.log(this._id);
     var sel = '#'+this._id;
-    $('.selected-slide').removeClass('selected-slide');
-    $(sel).addClass('selected-slide');
+    var oldSel = '#'+Session.get('selectedSlide');
+    $(sel).toggleClass('selected-slide');
+    if (Session.get('selectedSlide') === this._id) {
+      Session.set('selectedSlide',undefined);
+    } else {
+      $(oldSel).removeClass('selected-slide');
+      Session.set('selectedSlide',this._id);
+    }
+    // console.log(this._id);
+    // $('.selected-slide').removeClass('selected-slide');
+    // $(sel).addClass('selected-slide');
   }
 });
+
+Template.slide_list.rendered = function () {
+  // console.log('Selected slide id is '+Session.get('selectedSlide'));
+  $('#'+Session.get('selectedSlide')).addClass('selected-slide');
+  // $('[ind='+(currentSlide()-1)+']').addClass('showing-slide');
+  // $('#'+Session.get('currentSlide')).addClass('showing-slide');
+}
 
 // Template.current_slide.configLoaded = function () {
 //   return Session.get('configLoaded');
@@ -71,8 +132,22 @@ Template.show_nav.events({
   },
   'click .button-right': function () {
     nextSlide();
+  },
+  'click .shift-up': function () {
+    //move selected slide up
+    var thisInd = parseInt($(".selected-slide").attr('ind'));
+    console.log("current index is "+thisInd+".");
+    swapSlides(thisInd,thisInd-1);
+  },
+  'click .shift-down': function () {
+    //move selected slide down
+    var thisInd = parseInt($(".selected-slide").attr('ind'));
+    var thisId = $(".selected-slide").attr('id');    
+    swapSlides(thisInd,thisInd+1);
+    $("#"+thisId).addClass('selected-slide'); //select slide after swap. Might need session var?
   }
 });
+
 
 // Template.current_slide.currentSlide = function () {
 //   return Config.find().count();

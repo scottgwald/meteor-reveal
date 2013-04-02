@@ -39,8 +39,16 @@ h3 {
     text-align: center;
 }
 
+#show-nav {
+    cursor: pointer;
+}
+
 #slide-list .slide.selected-slide {
     background: #aaccff;
+}
+
+#slide-list .slide.showing-slide {
+    background: #ffccaa;
 }
 
 /*

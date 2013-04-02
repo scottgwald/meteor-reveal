@@ -4,7 +4,7 @@ Config = new Meteor.Collection("config");
 
 // Publish complete set of lists to all clients.
 Meteor.publish('slides', function () {
-  return Slides.find();
+  return Slides.find({}, {sort: {ind:1}});
 });
 
 Meteor.publish('config', function () {
@@ -35,5 +35,17 @@ Meteor.methods({
   revealReset: function () {
     Config.remove({});
     Config.insert({n:3});
+  },
+  moveSlide: function (sourceIndex, targetIndex) {
+    var id = Slides.findOne({ind:sourceIndex})._id;
+    var movinUp = targetIndex > sourceIndex;
+    shift = movinUp ? -1 : 1;
+    lowerIndex = Math.min(sourceIndex, targetIndex);
+    lowerIndex += movinUp ? 1 : 0;
+    upperIndex = Math.max(sourceIndex, targetIndex);
+    upperIndex -= movinUp ? 0 : 1;
+    console.log("Shifting slides from "+lowerIndex+" to "+upperIndex+" by "+shift+".");
+    Slides.update({ind: {$gte: lowerIndex,$lte: upperIndex}}, {$inc: {ind:shift}},{multi:true});
+    Slides.update(id, {$set: {ind:targetIndex}});
   }
 });
