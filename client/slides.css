@@ -47,9 +47,11 @@ h3 {
     background: #aaccff;
 }
 
+/*
 #slide-list .slide.showing-slide {
     background: #ffccaa;
 }
+*/
 
 /*
 #slide-list .slide .selected-slide {
@@ -71,6 +73,37 @@ h3 {
     top: 15px;
     height: 20px;
     width: 20px;
+}
+
+#slide-list .slide .statusDot {
+    /*cursor: pointer;*/
+    position: absolute;
+    left: 2px;
+    top: 14px;
+    position: absolute;
+    opacity: 1.0; /*0.5;*/
+    width: 0px;
+    height: 0px;
+    border: 0px solid;
+    border-radius: 0px;
+    /*border-color: #e95cd7;*/
+    /*border-color: #05f990; */
+    border-color: #00ff00;
+}
+
+#slide-list .slide.showing-slide div.statusDot {
+    border: 12px solid;
+    border-radius: 12px;
+    border-color: #05f990;
+    opacity: 0.5; 
+  /* there is probably a better way of centering */
+  /*top: 40px;
+  right: 40px;
+  -webkit-transition: opacity 0.2s ease;
+  -moz-transition: opacity 0.2s ease;
+  -ms-transition: opacity 0.2s ease;
+  -o-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;  */
 }
 
 #slide-list .slide .slide-text {

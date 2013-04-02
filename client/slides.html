@@ -26,11 +26,13 @@
 			{{> slide}}
 		{{/each}}
 	</ul>
+  {{highlightCurrent}}
 </template>
 
 <template name="slide">
-	<li class="slide" id="{{_id}}" ind="{{ind}}">
+	<li class="slide {{showing}}" id="{{_id}}" ind="{{ind}}">
 		<div class="destroy"></div>
+    <div class="statusDot"></div>
 		<div class="slide-text">{{text}}</div>
 	</li>
 </template>
