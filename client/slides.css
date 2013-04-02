@@ -39,6 +39,15 @@ h3 {
     text-align: center;
 }
 
+#slide-list .slide.selected-slide {
+    background: #aaccff;
+}
+
+/*
+#slide-list .slide .selected-slide {
+    background: #aaccff;
+}
+*/
 #slide-list .slide {
     display: block;
     height: 50px;

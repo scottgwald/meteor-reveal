@@ -7,6 +7,7 @@
 </body>
 
 <template name="view-edit">
+  <div id="show-nav">{{> show_nav}}</div>
 	<div id="main-pane">
   	<h1>List of slides</h1>
   	<div>
@@ -28,9 +29,14 @@
 </template>
 
 <template name="slide">
-	<li class="slide">
+	<li class="slide" id="{{_id}}">
 		<div class="destroy"></div>
 		<div class="slide-text">{{text}}</div>
 	</li>
 </template>
 
+<template name="show_nav">
+  <span class="button-left"> < </span>
+  <span class="current-slide">{{currentSlide}}</span>
+  <span class="button-right"> > </span>
+</template>

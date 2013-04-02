@@ -44,6 +44,14 @@ function revealReset() {
 Template.slide_list.slides = function () {return Slides.find({})};
 Template.reveal.slides = function () {return Slides.find({})};
 
+Template.slide.events({
+  'click .slide': function () {
+    console.log(this._id);
+    var sel = '#'+this._id;
+    $('.selected-slide').removeClass('selected-slide');
+    $(sel).addClass('selected-slide');
+  }
+});
 
 // Template.current_slide.configLoaded = function () {
 //   return Session.get('configLoaded');
@@ -52,6 +60,19 @@ Template.reveal.slides = function () {return Slides.find({})};
 Template.current_slide.currentSlide = function () {
   return currentSlide();
 }
+
+Template.show_nav.currentSlide = function () {
+  return currentSlide();
+}
+
+Template.show_nav.events({
+  'click .button-left': function () {
+    previousSlide();
+  },
+  'click .button-right': function () {
+    nextSlide();
+  }
+});
 
 // Template.current_slide.currentSlide = function () {
 //   return Config.find().count();
