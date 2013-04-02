@@ -69,8 +69,6 @@ function moveSlide(sourceIndex, targetIndex) {
   upperIndex = Math.max(sourceIndex, targetIndex);
   upperIndex -= movinUp ? 0 : 1;
   console.log("Shifting slides from "+lowerIndex+" to "+upperIndex+" by "+shift+" (with Meteor.call).");
-  // Slides.update({ind: {$gte: lowerIndex,$lte: upperIndex}}, {$inc: {ind:shift}},{multi:true});
-  // Slides.update(id, {$set: {ind:targetIndex}});
 }
 
 function revealReset() {
@@ -78,18 +76,11 @@ function revealReset() {
   Meteor.call('revealReset', function (error, result) {
     revealInit();    
   });
-  // Config.remove({});
-  // Config.insert({n:3});
 }
 
-// the template is not reacting to my updates of the "ind field".
-// perhaps this is because the client it doesn't know about the sort order parameter, since
-// it lives on the server. Try adding it here.
-// hell yeah.
 Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})};
 Template.reveal.slides = function () {return Slides.find({}, {sort: {ind:1}})};
 
-//TODO: make this a toggle
 Template.slide.events({
   'click .slide': function () {
     var sel = '#'+this._id;
@@ -101,26 +92,12 @@ Template.slide.events({
       $(oldSel).removeClass('selected-slide');
       Session.set('selectedSlide',this._id);
     }
-    // console.log(this._id);
-    // $('.selected-slide').removeClass('selected-slide');
-    // $(sel).addClass('selected-slide');
   }
 });
 
-// Template.slide_list.highlightCurrent = function () {
-//   $('[ind='+(currentSlide()-1)+']').addClass('showing-slide');  
-//   return "";
-// }
-
 Template.slide.showing = function() {
-  // console.log("slide.showing function 234.");
-  // console.log("this.ind "+this.ind);
   var cs = parseInt(currentSlide()) - 1;
-  // console.log("current slide "+cs);
-  // console.log("toString(currentSlide()-1) "+toString(currentSlide()-1));
-  // console.log("currentSlide()-1"+(currentSlide()-1));
   if (this.ind === cs) {
-    // console.log("found current slide.");
     return "showing-slide";
   } else {
     return "";
@@ -128,15 +105,8 @@ Template.slide.showing = function() {
 }
 
 Template.slide_list.rendered = function () {
-  // console.log('Selected slide id is '+Session.get('selectedSlide'));
   $('#'+Session.get('selectedSlide')).addClass('selected-slide');
-  // $('[ind='+(currentSlide()-1)+']').addClass('showing-slide');
-  // $('#'+Session.get('currentSlide')).addClass('showing-slide');
 }
-
-// Template.current_slide.configLoaded = function () {
-//   return Session.get('configLoaded');
-// }
 
 Template.current_slide.currentSlide = function () {
   return currentSlide();
@@ -167,25 +137,6 @@ Template.show_nav.events({
     $("#"+thisId).addClass('selected-slide'); //select slide after swap. Might need session var?
   }
 });
-
-
-// Template.current_slide.currentSlide = function () {
-//   return Config.find().count();
-// }
-
-// Template.current_slide.currentSlide = function () {
-//   // Session.setDefault("configID", Config.findOne({})._id);
-//   // return Config.findOne({_id: Session.get("configID")}).currentSlide;
-//   return Config.findOne({}).currentSlide;
-// }
-
-// For now:
-// next: Config.insert({});
-// previous: Config.remove(Config.findOne()._id)
-// current: Config.find().count();
-
-// Config.update({_id: Config.findOne({})._id}, {$set: {currentSlide: 2}})
-// Config.findOne({}).currentSlide
 
 var okCancelEvents = function (selector, callbacks) {
   var ok = callbacks.ok || function () {};
@@ -220,9 +171,6 @@ Template.slide_list.events(okCancelEvents(
         text: text
       });
       evt.target.value = '';
-      // Config.insert({});
-      // TODO: why doesn't this work?
-      // Config.update({}, {$inc: {currentSlide: 1}});
     }
   }
 ));
@@ -233,24 +181,13 @@ Template.slide.events({
   }
 });
 
-// function revealHashChange() {
-//   $('window').console.log("yoohoo! hash changed "+window.location.hash)
+// Template.reveal.created = function () {
+//   $(window).bind('hashchange', function () {
+//     console.log("hash changed "+window.location.hash);
+//   });
 // }
-
-// Template.reveal.bindHashChange = function () {
-//   $('window').on('hashchange', revealHashChange);
-// }
-Template.reveal.created = function () {
-  $(window).bind('hashchange', function () {
-    console.log("hash changed "+window.location.hash);
-  });
-}
 
 Template.reveal.rendered = function () {
-// Template.reveal.rendered = function () {
-  // $('<script>',{'src': 'js/reveal.min.js'}).appendTo('body');
-  // $('<script>',{'src': 'lib/js/head.min.js'}).appendTo('body');
-
   /**
       Head JS     The only script in your <HEAD>
       Copyright   Tero Piirainen (tipiirai)
@@ -287,23 +224,11 @@ Template.reveal.rendered = function () {
     ]
   });
 
-  // Reveal.addEventListener('slidechanged', function(event) {
-  //   Config.update({_id: Config.findOne({})._id}, {$set: {currentSlide: event.currentSlide}});
-  //   // Config.update({_id: Session.get("configID")},{$set: {currentSlide: event.currentSlide}});
-  // });
-
-  // Both of these work:
-  // Reveal.slide(Config.find().count());
-  // Reveal.slide($('#current-slide').attr('value'));
+  // this could be accelerated if necessary
   if (Session.get("configLoaded")) {
     var curr = currentSlide();
-    console.log("setting hash to "+curr);
-    // var currentSlide = Config.find(Session.get("configID")).currentSlide;
+    // console.log("setting hash to "+curr);
     window.location.hash = "#/"+curr;  
   }
-  // var currentSlide = Config.find().count();
-  // window.location.hash = "#/"+currentSlide;
-  console.log("Config loaded "+Session.get("configLoaded"));
-
-  // $(window).bind('hashchange', function () {console.log("hash changed "+window.location.hash)});
+  // console.log("Config loaded "+Session.get("configLoaded"));
 }
