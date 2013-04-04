@@ -37,16 +37,6 @@ function showSlides() {
   return Config.find({});
 }
 
-function migrateToOrder() {
-  var cur = Slides.find({});
-  var i = 0;
-  cur.forEach( function(slide){
-    console.log("Slide "+slide._id+" has index "+slide.ind);
-    console.log("Updating "+slide._id+" to index "+i);
-    Slides.update(slide._id, {$set: {ind: i}});
-    i+=1;
-  })
-}
 
 function swapSlides(ind1, ind2) {
   // should also check if there are more than one
@@ -168,7 +158,8 @@ Template.slide_list.events(okCancelEvents(
   {
     ok: function (text, evt) {
       Slides.insert({
-        text: text
+        text: text,
+        ind: Slides.find().count()
       });
       evt.target.value = '';
     }
@@ -177,7 +168,8 @@ Template.slide_list.events(okCancelEvents(
 
 Template.slide.events({
   'click .destroy': function () {
-      Slides.remove(this._id);
+      Meteor.call('removeSlide',this.ind); //could use id...
+      // Slides.remove(this._id);
   }
 });
 

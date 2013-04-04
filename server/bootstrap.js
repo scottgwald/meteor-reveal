@@ -11,6 +11,17 @@ Meteor.publish('config', function () {
   return Config.find();
 })
 
+function migrateToOrder() {
+  var cur = Slides.find({});
+  var i = 0;
+  cur.forEach( function(slide){
+    console.log("Slide "+slide._id+" has index "+slide.ind);
+    console.log("Updating "+slide._id+" to index "+i);
+    Slides.update(slide._id, {$set: {ind: i}});
+    i+=1;
+  })
+}
+
 Meteor.startup(function () {
   if (Slides.find().count() === 0) {
     var data = [
@@ -29,6 +40,8 @@ Meteor.startup(function () {
     Config.insert({n:5});
     // Config.insert({currentSlide: 0});
   }
+
+  migrateToOrder();
 });
 
 Meteor.methods({
@@ -47,5 +60,10 @@ Meteor.methods({
     console.log("Shifting slides from "+lowerIndex+" to "+upperIndex+" by "+shift+".");
     Slides.update({ind: {$gte: lowerIndex,$lte: upperIndex}}, {$inc: {ind:shift}},{multi:true});
     Slides.update(id, {$set: {ind:targetIndex}});
+  },
+  removeSlide: function (index) {
+    var id = Slides.findOne({ind:index})._id;
+    Slides.remove(id);
+    Slides.update({ind: {$gt: index}}, {$inc: {ind:-1}},{multi:true});
   }
 });
