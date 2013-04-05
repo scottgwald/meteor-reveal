@@ -32,7 +32,9 @@
 <template name="slide">
 	<li class="slide {{showing}}" id="{{_id}}" ind="{{ind}}">
 		<div class="destroy"></div>
+    <!-- these two can overlap -->
     <div class="statusDot"></div>
+    <div class="show-slide"></div>
 		<div class="slide-text">{{text}}</div>
 	</li>
 </template>

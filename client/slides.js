@@ -15,13 +15,19 @@ function revealInit() {
 }
 
 function nextSlide() {
+  // TODO check in bounds
   Config.update(Session.get('configID'),{$inc: {n:1}});
   return currentSlide();
 }
 
 function previousSlide() {
+  // TODO check in bounds
   Config.update(Session.get('configID'),{$inc: {n:-1}});
   return currentSlide();
+}
+
+function gotoSlide(ind) {
+  Config.update(Session.get('configID'), {$set: {n:ind+1}});
 }
 
 function currentSlide() {
@@ -170,6 +176,9 @@ Template.slide.events({
   'click .destroy': function () {
       Meteor.call('removeSlide',this.ind); //could use id...
       // Slides.remove(this._id);
+  },
+  'click .show-slide': function () {
+    gotoSlide(this.ind);
   }
 });
 

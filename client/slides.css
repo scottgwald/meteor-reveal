@@ -69,16 +69,16 @@ h3 {
 #slide-list .slide .destroy {
     cursor: pointer;
     position: absolute;
-    left: 5px;
+    right: 5px;
     top: 15px;
     height: 20px;
     width: 20px;
 }
 
-#slide-list .slide .statusDot {
+#slide-list .slide .statusDot, #slide-list .slide .show-slide {
     /*cursor: pointer;*/
     position: absolute;
-    left: 2px;
+    left: 2px; /* 30px; /* 2px */
     top: 14px;
     position: absolute;
     opacity: 1.0; /*0.5;*/
@@ -107,7 +107,7 @@ h3 {
 }
 
 #slide-list .slide .slide-text {
-    margin-left: 30px;
+    margin-left: 30px; /*60px; /* 30px */
     height: 100%;
     width: auto;
     float: left;
@@ -117,6 +117,13 @@ h3 {
 
 #slide-list .slide:hover .destroy {
 	background: url('/destroy.png') no-repeat 0 0;
+}
+
+#slide-list .slide:hover .show-slide {
+    border: 12px solid;
+    border-radius: 12px;
+    border-color: #888;
+    opacity: 0.5; 
 }
 
 #slide-list .slide .destroy:hover{
