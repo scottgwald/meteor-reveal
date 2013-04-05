@@ -43,7 +43,7 @@ h3 {
     cursor: pointer;
 }
 
-#slide-list .slide.selected-slide {
+#slide-list .slide.selected-slide, #slide-list .slide.selected-slide:hover {
     background: #aaccff;
 }
 
@@ -64,6 +64,10 @@ h3 {
     position: relative;
     overflow: hidden;
     border-top: 1px solid #ccc;
+}
+
+#slide-list .slide:hover {
+    background: #ddd;
 }
 
 #slide-list .slide .destroy {
