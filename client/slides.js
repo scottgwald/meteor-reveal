@@ -78,7 +78,7 @@ Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})
 Template.reveal.slides = function () {return Slides.find({}, {sort: {ind:1}})};
 
 Template.slide.events({
-  'click .slide': function () {
+  'mousedown .slide': function () {
     var sel = '#'+this._id;
     var oldSel = '#'+Session.get('selectedSlide');
     $(sel).toggleClass('selected-slide');
@@ -102,6 +102,14 @@ Template.slide.showing = function() {
 
 Template.slide_list.rendered = function () {
   $('#'+Session.get('selectedSlide')).addClass('selected-slide');
+  $('#slide-list').sortable({
+    axis:'y',
+    update: function(event,ui) {
+      // var item = ui.item[0];
+      // console.log(item);
+      moveSlide(parseInt(ui.item.attr('ind')),parseInt(ui.item.index()));
+      console.log("Moved item with id "+ui.item.attr('id')+" and index "+ui.item.attr('ind')+" to new position "+ui.item.index()+"."); 
+    }});
 }
 
 Template.current_slide.currentSlide = function () {
