@@ -108,6 +108,10 @@ Template.slide_list.rendered = function () {
       // var item = ui.item[0];
       // console.log(item);
       moveSlide(parseInt(ui.item.attr('ind')),parseInt(ui.item.index()));
+      if (ui.item.hasClass('showing-slide')) {
+        console.log("Moved the showing slide.");
+        gotoSlide(parseInt(ui.item.index()));
+      }
       console.log("Moved item with id "+ui.item.attr('id')+" and index "+ui.item.attr('ind')+" to new position "+ui.item.index()+"."); 
     }});
 }
