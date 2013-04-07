@@ -2,7 +2,6 @@
   {{> current_slide}}
   <link rel="stylesheet" href="css/reveal.min.css">
   <link rel="stylesheet" href="css/theme/default.css" id="theme">
-
   <!-- For syntax highlighting -->
   <link rel="stylesheet" href="lib/css/zenburn.css">
 
@@ -26,6 +25,44 @@
 
 </template>
 
+<template name="reveals">
+  <link rel="stylesheet" href="css/reveal.min.css">
+  <link rel="stylesheet" href="css/theme/default.css" id="theme">
+  <!-- For syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+  <script>
+  document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+  </script>
+  <div class="reveal" id="rvl0">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+      <section>
+        <h1>Scott's StatusWear</h1>
+        <h3>by Scott Greenwald</h3>
+      </section>
+      {{#each slides}}
+        {{> reveal_slide}}
+      {{/each}}
+    </div>
+  </div>
+  <div class="reveal" id="rvl1">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+      <section>
+        <h1>Scott's StatusWear</h1>
+        <h3>by Scott Greenwald</h3>
+      </section>
+      {{#each slides}}
+        {{> reveal_slide}}
+      {{/each}}
+    </div>
+  </div>
+</template>
+
 <template name="reveal_slide">
   <section>
     <h1>{{text}}</h1>
@@ -36,3 +73,18 @@
     <input id="current-slide" type="hidden" value="{{currentSlide}}"> 
 </template>
 
+<!-- 
+<template name='reveal-panels'>
+  <div class="reveal-panels">
+    <div class="reveal-left">Something on the left.</div>
+    <div class="reveal-right">Something on the right.</div>
+  </div>
+</template>
+ -->
+
+<template name='reveal_panels'>
+  <div class="reveal-panels">
+    <div class="reveal-left">{{text}}</div>
+    <div class="reveal-right">{{nextText}}</div>
+  </div>
+</template>

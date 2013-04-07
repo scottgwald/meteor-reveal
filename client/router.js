@@ -1,9 +1,13 @@
 Meteor.Router.add({
-  '/':'view-edit',
+  '/':'view_edit',
 
-  '/edit': 'view-edit', // renders template 'news'
+  '/edit': 'view_edit', // renders template 'news'
 
   '/reveal': 'reveal',
+
+  '/revealp': 'reveal_panels',
+
+  '/reveals': 'reveals',
 
   '/about': function() {
     if (Session.get('aboutUs')) {
