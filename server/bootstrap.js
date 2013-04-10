@@ -65,5 +65,8 @@ Meteor.methods({
     var id = Slides.findOne({ind:index})._id;
     Slides.remove(id);
     Slides.update({ind: {$gt: index}}, {$inc: {ind:-1}},{multi:true});
+  },
+  shiftUp: function() {
+    Slides.update({},{$inc:{ind:1}},{multi:true});
   }
 });

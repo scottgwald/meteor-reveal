@@ -1,0 +1,23 @@
+.reveal-panels {
+	width: 100%;
+	height: 100%;
+}
+
+.reveal-panels [class|="reveal"] {
+	position: absolute;
+	width: 350px;
+	height: 350px;
+	text-align: center;
+	line-height: 350px;
+}
+
+.reveal-left {
+	background: #ddd;
+	left: 0px;
+}
+
+.reveal-panels .reveal-right {
+	background: #888;
+	left: 400px;
+}
+
