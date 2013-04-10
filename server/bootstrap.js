@@ -66,7 +66,10 @@ Meteor.methods({
     Slides.remove(id);
     Slides.update({ind: {$gt: index}}, {$inc: {ind:-1}},{multi:true});
   },
-  shiftUp: function() {
-    Slides.update({},{$inc:{ind:1}},{multi:true});
+  // incremenet indices of all slides above/including lowerIndex
+  shiftUp: function(lowerIndex) {
+    // console.log("lowerIndex is "+lowerIndex);
+    var theLowerIndex = (lowerIndex===undefined)?0:lowerIndex;
+    Slides.update({ind: {$gte:theLowerIndex}},{$inc:{ind:1}},{multi:true});
   }
 });

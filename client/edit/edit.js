@@ -5,6 +5,7 @@ Template.slide.events({
     var sel = '#'+this._id;
     var oldSel = '#'+Session.get('selectedSlide');
     $(sel).toggleClass('selected-slide');
+    // logic to "deselect" the session variable
     if (Session.get('selectedSlide') === this._id) {
       Session.set('selectedSlide',undefined);
     } else {
@@ -18,6 +19,14 @@ Template.slide.showing = function() {
   var cs = parseInt(currentSlide()) - 1;
   if (this.ind === cs) {
     return "showing-slide";
+  } else {
+    return "";
+  }
+}
+
+Template.slide.selected = function() {
+  if (this._id === Session.get('selectedSlide')) {
+    return "selected-slide";
   } else {
     return "";
   }
@@ -97,12 +106,22 @@ Template.slide_list.events(okCancelEvents(
   '#new-slide',
   {
     ok: function (text, evt) {
-      Meteor.call('shiftUp');
-      Slides.insert({
-        text: text,
-        ind: 0 //Slides.find().count()
-      });
-      evt.target.value = '';
+      if (Session.get('selectedSlide') === undefined) {
+        Meteor.call('shiftUp');
+        Slides.insert({
+          text: text,
+          ind: 0 //Slides.find().count()
+        });
+      } else {
+        var spaceAt = parseInt(slideInd(Session.get('selectedSlide')))+1;
+        Meteor.call('shiftUp',spaceAt);
+        var newId = Slides.insert({
+          text: text,
+          ind: spaceAt
+        });
+        Session.set('selectedSlide',newId);
+      }
+      evt.target.value = ''; // I think this was some magic so touch punch would work.
     }
   }
 ));
