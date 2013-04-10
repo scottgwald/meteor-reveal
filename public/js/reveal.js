@@ -74,7 +74,9 @@ var Reveal = (function(){
 			transition: 'default', // default/cube/page/concave/zoom/linear/fade/none
 
 			// Script dependencies to load
-			dependencies: []
+			dependencies: [],
+
+			idSel: ""
 		},
 
 		// The current auto-slide duration
@@ -160,6 +162,12 @@ var Reveal = (function(){
 		// Copy options over to our config object
 		extend( config, options );
 
+		// add id to selectors, if applicable
+		SLIDES_SELECTOR = config.idSel+'.reveal .slides section';
+		HORIZONTAL_SLIDES_SELECTOR = config.idSel+'.reveal .slides>section';
+		VERTICAL_SLIDES_SELECTOR = config.idSel+'.reveal .slides>section.present>section';
+		HOME_SLIDE_SELECTOR = config.idSel+'.reveal .slides>section:first-child';
+
 		// Hide the address bar in mobile browsers
 		hideAddressBar();
 
@@ -179,6 +187,65 @@ var Reveal = (function(){
 		dom.theme = document.querySelector( '#theme' );
 		dom.wrapper = document.querySelector( '.reveal' );
 		dom.slides = document.querySelector( '.reveal .slides' );
+
+		// Progress bar
+		if( !dom.wrapper.querySelector( '.progress' ) ) {
+			var progressElement = document.createElement( 'div' );
+			progressElement.classList.add( 'progress' );
+			progressElement.innerHTML = '<span></span>';
+			dom.wrapper.appendChild( progressElement );
+		}
+
+		// Arrow controls
+		if( !dom.wrapper.querySelector( '.controls' ) ) {
+			var controlsElement = document.createElement( 'aside' );
+			controlsElement.classList.add( 'controls' );
+			controlsElement.innerHTML = '<div class="navigate-left"></div>' +
+										'<div class="navigate-right"></div>' +
+										'<div class="navigate-up"></div>' +
+										'<div class="navigate-down"></div>';
+			dom.wrapper.appendChild( controlsElement );
+		}
+
+		// Presentation background element
+		if( !dom.wrapper.querySelector( '.state-background' ) ) {
+			var backgroundElement = document.createElement( 'div' );
+			backgroundElement.classList.add( 'state-background' );
+			dom.wrapper.appendChild( backgroundElement );
+		}
+
+		// Overlay graphic which is displayed during the paused mode
+		if( !dom.wrapper.querySelector( '.pause-overlay' ) ) {
+			var pausedElement = document.createElement( 'div' );
+			pausedElement.classList.add( 'pause-overlay' );
+			dom.wrapper.appendChild( pausedElement );
+		}
+
+		// Cache references to elements
+		dom.progress = document.querySelector( '.reveal .progress' );
+		dom.progressbar = document.querySelector( '.reveal .progress span' );
+
+		if ( config.controls ) {
+			dom.controls = document.querySelector( '.reveal .controls' );
+
+			// There can be multiple instances of controls throughout the page
+			dom.controlsLeft = toArray( document.querySelectorAll( '.navigate-left' ) );
+			dom.controlsRight = toArray( document.querySelectorAll( '.navigate-right' ) );
+			dom.controlsUp = toArray( document.querySelectorAll( '.navigate-up' ) );
+			dom.controlsDown = toArray( document.querySelectorAll( '.navigate-down' ) );
+			dom.controlsPrev = toArray( document.querySelectorAll( '.navigate-prev' ) );
+			dom.controlsNext = toArray( document.querySelectorAll( '.navigate-next' ) );
+		}
+
+	}
+
+	function setupDOMmulti() {
+		console.log("setupDOMmulti.");
+		var idSel = config.idSel;
+		// Cache references to key DOM elements
+		dom.theme = document.querySelector( '#theme' );
+		dom.wrapper = document.querySelector( idSel+'.reveal');
+		dom.slides = document.querySelector( idSel+'.reveal .slides');
 
 		// Progress bar
 		if( !dom.wrapper.querySelector( '.progress' ) ) {
@@ -304,7 +371,11 @@ var Reveal = (function(){
 	function start() {
 
 		// Make sure we've got all the DOM elements we need
-		setupDOM();
+		if (config.idSel === "") {
+			setupDOM();
+		} else {
+			setupDOMmulti();
+		}
 
 		// Updates the presentation to match the current configuration values
 		configure();
