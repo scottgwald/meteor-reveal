@@ -12,7 +12,7 @@ Meteor.publish('config', function () {
 })
 
 function migrateToOrder() {
-  var cur = Slides.find({});
+  var cur = Slides.find({},{sort: {ind:1}});
   var i = 0;
   cur.forEach( function(slide){
     console.log("Slide "+slide._id+" has index "+slide.ind);
