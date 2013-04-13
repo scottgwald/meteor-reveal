@@ -41,6 +41,16 @@ Meteor.startup(function () {
     // Config.insert({currentSlide: 0});
   }
 
+  var config = Config.findOne({});
+  if (config.id === undefined) {
+    console.log("config.id was undefined.");
+    var newId = Slides.findOne({})._id;
+    console.log("setting config.id to "+newId+".");
+    Config.update(config.id, {$set: {id: newId}});
+  } else {
+    console.log("config.id defined: "+config.id+".");
+  }
+
   migrateToOrder();
 });
 
@@ -66,10 +76,19 @@ Meteor.methods({
     Slides.remove(id);
     Slides.update({ind: {$gt: index}}, {$inc: {ind:-1}},{multi:true});
   },
+  removeSlideId: function(theId) {
+    console.log("theId is "+theId+".");
+    var index = Slides.findOne(theId).ind;
+    Slides.remove(theId);
+    Slides.update({ind: {$gt: index}}, {$inc: {ind:-1}},{multi:true});
+  },
   // incremenet indices of all slides above/including lowerIndex
   shiftUp: function(lowerIndex) {
     // console.log("lowerIndex is "+lowerIndex);
     var theLowerIndex = (lowerIndex===undefined)?0:lowerIndex;
     Slides.update({ind: {$gte:theLowerIndex}},{$inc:{ind:1}},{multi:true});
+  },
+  migrateToOrder: function() {
+    migrateToOrder();
   }
 });

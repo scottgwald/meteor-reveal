@@ -1,23 +1,56 @@
 Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})};
 
+// Template.slide.events({
+//   'mousedown .slide': function () {
+//     var sel = '#'+this._id;
+//     var oldSel = '#'+Session.get('selectedSlide');
+//     $(sel).toggleClass('selected-slide');
+//     // logic to "deselect" the session variable
+//     if (Session.get('selectedSlide') === this._id) {
+//       Session.set('selectedSlide',undefined);
+//     } else {
+//       $(oldSel).removeClass('selected-slide');
+//       Session.set('selectedSlide',this._id);
+//     }
+//   }
+// });
+
 Template.slide.events({
-  'mousedown .slide': function () {
-    var sel = '#'+this._id;
-    var oldSel = '#'+Session.get('selectedSlide');
-    $(sel).toggleClass('selected-slide');
-    // logic to "deselect" the session variable
-    if (Session.get('selectedSlide') === this._id) {
+  'click .destroy': function () {
+    console.log("Clicked destroy element.");
+    console.log(this);
+    Meteor.call('removeSlideId',this._id); //could use id...
+      // Slides.remove(this._id);
+  },
+  'click .show-slide': function () {
+    console.log("Clicked show-slide element.");
+    gotoSlideId(this._id);
+  },
+  'click .slide': function () {
+    var clicked = this._id;
+    var oldSelected = Session.get('selectedSlide');
+    if (clicked === oldSelected) {
+      console.log("deselecting, now nothing selected 257.");
       Session.set('selectedSlide',undefined);
     } else {
-      $(oldSel).removeClass('selected-slide');
-      Session.set('selectedSlide',this._id);
+      Session.set('selectedSlide',clicked);
     }
   }
 });
 
+// Template.slide.showing = function() {
+//   var cs = parseInt(currentSlide()) - 1;
+//   if (this.ind === cs) {
+//     return "showing-slide";
+//   } else {
+//     return "";
+//   }
+// }
+
 Template.slide.showing = function() {
-  var cs = parseInt(currentSlide()) - 1;
-  if (this.ind === cs) {
+  var cid = getShowingSlide();
+  if (this._id === cid) {
+    console.log("Found it! 4757");
     return "showing-slide";
   } else {
     return "";
@@ -126,12 +159,3 @@ Template.slide_list.events(okCancelEvents(
   }
 ));
 
-Template.slide.events({
-  'click .destroy': function () {
-      Meteor.call('removeSlide',this.ind); //could use id...
-      // Slides.remove(this._id);
-  },
-  'click .show-slide': function () {
-    gotoSlide(this.ind);
-  }
-});

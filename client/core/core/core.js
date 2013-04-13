@@ -5,6 +5,7 @@
   Session.set('notFoundId', "xxxx");
   Session.set('notFoundInd', 9999);
   Session.set('notFoundText', "No slide here!");
+  Session.set('currentSlide',Session.get('notFoundId'));
   //Session.set('panelIndex',0);
 
   Meteor.subscribe('slides');
@@ -39,17 +40,21 @@ Meteor.Router.add({
 nextSlide = function() {
   // TODO check in bounds
   Config.update(Session.get('configID'),{$inc: {n:1}});
-  return currentSlide();
+  return currentSlideInd();
 }
 
 previousSlide = function() {
   // TODO check in bounds
   Config.update(Session.get('configID'),{$inc: {n:-1}});
-  return currentSlide();
+  return currentSlideInd();
 }
 
 gotoSlide = function(ind) {
   Config.update(Session.get('configID'), {$set: {n:ind+1}});
+}
+
+gotoSlideId = function(theId) {
+  Config.update(Session.get('configID'), {$set: {id:theId}});
 }
 
 // function currentSlide() {
@@ -74,6 +79,16 @@ currentSlide = function() {
   }
 };
 
+getShowingSlide = function() {
+  if (! Session.get("configLoaded")) {
+    console.log("config not loaded");
+    return Session.get("notFoundId");
+  }  else {
+    console.log("config loaded."); 
+    // use id instead to avoid undefined in transient state?
+    return Config.findOne(Session.get('configID')).id;
+  }
+};
 
 slideText = function(id) {
   var sl = Slides.findOne(id);
@@ -106,6 +121,12 @@ slideInd = function(id) {
 
 currentSlideInd = function() {
   return currentSlide();
+}
+
+
+
+currentSlideId = function() {
+  Session.get('showingSlide');
 }
 
 currentSlideId = function() {
