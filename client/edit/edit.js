@@ -48,7 +48,7 @@ Template.slide.events({
 // }
 
 Template.slide.showing = function() {
-  var cid = getShowingSlide();
+  var cid = getShowingSlideId();
   if (this._id === cid) {
     console.log("Found it! 4757");
     return "showing-slide";
@@ -85,7 +85,7 @@ Template.slide_list.rendered = function () {
 }
 
 Template.show_nav.currentSlide = function () {
-  return currentSlide();
+  return currentSlideInd();
 }
 
 Template.show_nav.events({

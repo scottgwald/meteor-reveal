@@ -44,7 +44,7 @@ Template.reveal_panels.nextText = function () {
 }
 
 Template.current_slide.currentSlide = function () {
-  return currentSlide();
+  return currentSlideInd();
 }
 
 revealCreated = function() {
@@ -106,7 +106,7 @@ revealRendered = function() {
 
   // this could be accelerated if necessary
   if (Session.get("configLoaded")) {
-    var curr = currentSlide();
+    var curr = currentSlideInd()+1;
     // console.log("setting hash to "+curr);
     window.location.hash = "#/"+curr;  
   }  
@@ -165,7 +165,7 @@ revealsRendered = function() {
 
   // this could be accelerated if necessary
   if (Session.get("configLoaded")) {
-    var curr = currentSlide();
+    var curr = currentSlideInd()+1;
     // console.log("setting hash to "+curr);
     window.location.hash = "#/"+curr;  
   }  

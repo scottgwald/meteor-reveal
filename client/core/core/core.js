@@ -39,13 +39,17 @@ Meteor.Router.add({
 
 nextSlide = function() {
   // TODO check in bounds
-  Config.update(Session.get('configID'),{$inc: {n:1}});
+  var newId = slideId(currentSlideInd()+1);
+  // Config.update(Session.get('configID'),{$inc: {n:1}});
+  Config.update(Session.get('configID'),{$set: {id:newId}});
   return currentSlideInd();
 }
 
 previousSlide = function() {
   // TODO check in bounds
-  Config.update(Session.get('configID'),{$inc: {n:-1}});
+  var newId = slideId(currentSlideInd()-1);
+  // Config.update(Session.get('configID'),{$inc: {n:-1}});
+  Config.update(Session.get('configID'),{$set: {id:newId}});
   return currentSlideInd();
 }
 
@@ -56,17 +60,6 @@ gotoSlide = function(ind) {
 gotoSlideId = function(theId) {
   Config.update(Session.get('configID'), {$set: {id:theId}});
 }
-
-// function currentSlide() {
-//   if (! Session.get("configLoaded")) {
-//     console.log("config not loaded");
-//     return -1;
-//   }  else {
-//     console.log("config loaded."); 
-//     // use id instead to avoid undefined in transient state?
-//     return Config.findOne(Session.get('configID')).n; 
-//   }
-// }
 
 currentSlide = function() {
   if (! Session.get("configLoaded")) {
@@ -79,7 +72,7 @@ currentSlide = function() {
   }
 };
 
-getShowingSlide = function() {
+getShowingSlideId = function() {
   if (! Session.get("configLoaded")) {
     console.log("config not loaded");
     return Session.get("notFoundId");
@@ -120,25 +113,11 @@ slideInd = function(id) {
 }
 
 currentSlideInd = function() {
-  return currentSlide();
+  return slideInd(getShowingSlideId());
 }
-
-
-
-currentSlideId = function() {
-  Session.get('showingSlide');
-}
-
-currentSlideId = function() {
-  return slideId(currentSlide());
-}
-
-// function currentSlideId() {
-//   Slides.findOne({ind:
-// }
 
 currentSlideText = function() {
-  var sl = Slides.findOne({ind:currentSlide()});
+  var sl = Slides.findOne({ind:currentSlideInd()});
   if (! sl) {
     return "Loading";
   } else {
