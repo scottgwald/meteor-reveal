@@ -19,6 +19,7 @@ Template.slide.events({
   'click .destroy': function () {
     console.log("Clicked destroy element.");
     console.log(this);
+    nextSlide();
     Meteor.call('removeSlideId',this._id); //could use id...
       // Slides.remove(this._id);
   },
