@@ -1,9 +1,10 @@
 {
- "meteor": {
+  "meteor": {
     "version": "0.6.1"
   },
   "packages": {
     "router": {},
-    "jquery-ui": {}
+    "jquery-ui": {},
+    "observatory": {}
   }
 }

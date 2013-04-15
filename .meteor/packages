@@ -8,3 +8,6 @@ preserve-inputs
 router
 jquery
 jquery-ui
+accounts-google
+accounts-ui
+email

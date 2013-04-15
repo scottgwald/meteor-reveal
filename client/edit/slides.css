@@ -38,6 +38,10 @@ h3 {
     padding: 8px 6px;
     text-align: center;
 }
+#login-buttons {
+    position: fixed;
+    right: 20px;
+}
 
 #show-nav {
     cursor: pointer;
