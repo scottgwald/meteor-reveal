@@ -1,19 +1,21 @@
 //Meteor.startup( function() {
-  Session.set('configLoaded',false);
-  Slides = new Meteor.Collection('slides');
-  Config = new Meteor.Collection('config');
-  Session.set('notFoundId', "xxxx");
-  Session.set('notFoundInd', 9999);
-  Session.set('notFoundText', "No slide here!");
-  Session.set('currentSlide',Session.get('notFoundId'));
-  //Session.set('panelIndex',0);
+Session.set('configLoaded',false);
+Slides = new Meteor.Collection('slides');
+Config = new Meteor.Collection('config');
+Session.set('notFoundId', "xxxx");
+Session.set('notFoundInd', 9999);
+Session.set('notFoundText', "No slide here!");
+Session.set('currentSlide',Session.get('notFoundId'));
+//Session.set('panelIndex',0);
 
-  Meteor.subscribe('slides');
+Meteor.subscribe('slides');
 
-  Meteor.subscribe('config', function onComplete() {
-    revealInit();
-  });
+Meteor.subscribe('config', function onComplete() {
+  revealInit();
+});
 //})
+
+Meteor.subscribe("directory");
 
 Meteor.Router.add({
   '/':'view_edit',

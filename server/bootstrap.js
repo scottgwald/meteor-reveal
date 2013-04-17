@@ -11,6 +11,10 @@ Meteor.publish('config', function () {
   return Config.find();
 })
 
+Meteor.publish("directory", function () {
+  return Meteor.users.find({}, {fields: {emails: 1, profile: 1}});
+});
+
 function migrateToOrder() {
   var cur = Slides.find({},{sort: {ind:1}});
   var i = 0;
@@ -20,6 +24,10 @@ function migrateToOrder() {
     Slides.update(slide._id, {$set: {ind: i}});
     i+=1;
   })
+}
+
+function migrateToUser(userId) {
+  Slides.update({owner: undefined},{$set: {owner: userId}},{multi:true});
 }
 
 Meteor.startup(function () {
@@ -90,5 +98,8 @@ Meteor.methods({
   },
   migrateToOrder: function() {
     migrateToOrder();
+  },
+  migrateToUser: function (userId) {
+    migrateToUser(userId);
   }
 });

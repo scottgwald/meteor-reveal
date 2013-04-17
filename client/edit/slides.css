@@ -47,6 +47,15 @@ h3 {
     cursor: pointer;
 }
 
+#slide-list {
+    z-index: -1;
+    /*width: 400px;*/
+}
+
+#login-dropdown-list {
+    z-index:10;
+}
+
 #slide-list .slide.selected-slide, #slide-list .slide.selected-slide:hover {
     background: #aaccff;
 }
@@ -68,6 +77,7 @@ h3 {
     position: relative;
     overflow: hidden;
     border-top: 1px solid #ccc;
+    z-index:-1;
 }
 
 #slide-list .slide:hover {
