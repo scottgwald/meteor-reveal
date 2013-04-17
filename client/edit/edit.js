@@ -144,14 +144,16 @@ Template.slide_list.events(okCancelEvents(
         Meteor.call('shiftUp');
         Slides.insert({
           text: text,
-          ind: 0 //Slides.find().count()
+          ind: 0, //Slides.find().count()
+          owner: Meteor.userId()
         });
       } else {
         var spaceAt = parseInt(slideInd(Session.get('selectedSlide')))+1;
         Meteor.call('shiftUp',spaceAt);
         var newId = Slides.insert({
           text: text,
-          ind: spaceAt
+          ind: spaceAt,
+          owner: Meteor.userId()
         });
         Session.set('selectedSlide',newId);
       }
@@ -159,4 +161,28 @@ Template.slide_list.events(okCancelEvents(
     }
   }
 ));
+
+// Template.slide_list.events(okCancelEvents(
+//   '#new-slide',
+//   {
+//     ok: function (text, evt) {
+//       if (Session.get('selectedSlide') === undefined) {
+//         Meteor.call('shiftUp');
+//         Slides.insert({
+//           text: text,
+//           ind: 0 //Slides.find().count()
+//         });
+//       } else {
+//         var spaceAt = parseInt(slideInd(Session.get('selectedSlide')))+1;
+//         Meteor.call('shiftUp',spaceAt);
+//         var newId = Slides.insert({
+//           text: text,
+//           ind: spaceAt
+//         });
+//         Session.set('selectedSlide',newId);
+//       }
+//       evt.target.value = ''; // I think this was some magic so touch punch would work.
+//     }
+//   }
+// ));
 

@@ -8,7 +8,14 @@ Session.set('notFoundText', "No slide here!");
 Session.set('currentSlide',Session.get('notFoundId'));
 //Session.set('panelIndex',0);
 
-Meteor.subscribe('slides');
+// Meteor.subscribe('slides');
+
+Deps.autorun(function () {
+  if (Meteor.userId()) {
+    Meteor.subscribe('slidesForUser');
+    Meteor.call('fixMyOrder');
+  }
+});
 
 Meteor.subscribe('config', function onComplete() {
   revealInit();
