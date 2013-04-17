@@ -92,7 +92,7 @@ revealRendered = function() {
     progress: true,
     history: true,
     center: true,
-    width: "40%",
+    // width: "40%",
     idSel: "",
 
     theme: document.Reveal.getQueryHash().theme, // available themes are in /css/theme
