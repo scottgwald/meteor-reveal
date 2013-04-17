@@ -40,6 +40,7 @@ h3 {
 }
 #login-buttons {
     position: fixed;
+    z-index: 10;
     right: 20px;
 }
 
@@ -55,12 +56,14 @@ h3 {
 
 #slide-list {
     position:absolute;
-    z-index: 0;
+    z-index: inherit;
+    /*z-index: 0;*/
     width: 90%; /* this is a hack because I can't figure out how to make it go all the way to the right edge, but not beyond */
 }
 
 #login-dropdown-list {
-    z-index:10;
+    z-index: inherit;
+    /*z-index:10;*/
 }
 
 #slide-list .slide.selected-slide, #slide-list .slide.selected-slide:hover {
