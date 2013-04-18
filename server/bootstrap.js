@@ -15,6 +15,10 @@ Meteor.publish('config', function () {
   return Config.find();
 });
 
+Meteor.publish('configForUser', function() {
+  return Config.find({owner:this.userId});
+})
+
 Meteor.publish("directory", function () {
   return Meteor.users.find({}, {fields: {emails: 1, profile: 1}});
 });

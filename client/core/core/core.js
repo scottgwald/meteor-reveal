@@ -14,12 +14,19 @@ Deps.autorun(function () {
   if (Meteor.userId()) {
     Meteor.subscribe('slidesForUser');
     Meteor.call('fixMyOrder');
+    Meteor.subscribe('configForUser', function onComplete() {
+      if (Config.find({}).count()===0) {
+        console.log("creating new config object for user "+Meteor.userId());
+        Config.insert({owner:Meteor.userId(),id:Slides.findOne({})._id});
+      };
+      revealInit();
+    });
   }
 });
 
-Meteor.subscribe('config', function onComplete() {
-  revealInit();
-});
+// Meteor.subscribe('config', function onComplete() {
+//   revealInit();
+// });
 //})
 
 Meteor.subscribe("directory");
