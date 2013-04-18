@@ -17,7 +17,8 @@ Deps.autorun(function () {
     Meteor.subscribe('configForUser', function onComplete() {
       if (Config.find({}).count()===0) {
         console.log("creating new config object for user "+Meteor.userId());
-        Config.insert({owner:Meteor.userId(),id:Slides.findOne({})._id});
+        Config.insert({owner:Meteor.userId(),id:Session.get('notFoundId')});
+        // Config.insert({owner:Meteor.userId(),id:Slides.findOne({})._id});
       };
       revealInit();
     });
