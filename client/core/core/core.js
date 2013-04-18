@@ -21,6 +21,8 @@ Deps.autorun(function () {
       };
       revealInit();
     });
+  } else {
+    Session.set("configLoaded",false);
   }
 });
 
