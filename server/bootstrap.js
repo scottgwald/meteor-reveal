@@ -51,6 +51,33 @@ function fixMyOrder() {
   })
 }
 
+function pruneMalformedUsers() {
+  var users = Meteor.users.find();
+  users.map(function (user) {
+    if (user.profile === undefined) {
+      console.log("removing malformed user "+user._id);
+      Meteor.users.remove(user._id);
+    }
+  })
+}
+
+function removeUser(userId) {
+  var user = Meteor.users.findOne(userId);
+  try {
+    var name = user.profile.name;
+  } catch(e) {
+    console.log("profile.name undefined.");
+    var name = undefined;
+  }
+  if (user) {
+    console.log("Removing user "+userId+" with user.profile.name "+name+".");
+    Meteor.users.remove(user._id);
+    return "Did it."
+  } else {
+    return "Couldn't find user with userId "+userId+"."
+  }
+}
+
 // modify this to do index integrity check when
 // user logs in... 
 Meteor.startup(function () {
@@ -81,6 +108,8 @@ Meteor.startup(function () {
   } else {
     console.log("config.id defined: "+config.id+".");
   }
+
+  // TODO: collectionsCheckrep();
 
   // migrateToOrder();
 });
@@ -158,11 +187,18 @@ Meteor.methods({
   },
   fixMyOrder: function() {
     fixMyOrder();
+  },
+  pruneMalformedUsers: function() {
+    pruneMalformedUsers();
+  },
+  removeUser: function(userId) {
+    removeUser(userId);
   }
 });
 
-Accounts.onCreateUser(function(options,user) {
-  // populate collection with user's slides
-  // I was thinking one big collection... 
-
-});
+// Accounts.onCreateUser(function(options,user) {
+//   // populate collection with user's slides
+//   // I was thinking one big collection... 
+//   // check that profile/services are non-empty
+//   // hopefully it won't be an issue...
+// });
