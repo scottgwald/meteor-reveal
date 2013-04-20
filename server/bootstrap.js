@@ -19,10 +19,15 @@ Meteor.publish('configForUser', function() {
   return Config.find({owner:this.userId});
 })
 
-Meteor.publish("directory", function () {
-  return Meteor.users.find({});
-  // return Meteor.users.find({}, {fields: {emails: 1, profile: 1}});
-});
+// Meteor.publish("directory", function () {
+//     // return Meteor.users.find({});
+//   return Meteor.users.find({}, {fields: {'profile.name':1, 'services.google.email': 1}});
+// });
+
+Meteor.publish("userInDetail", function() {
+  return Meteor.users.find(this.userId);
+  // return Meteor.users.find({_id:this.userId}).fetch(); //, {fields: {'createdAt':1, 'services.password':1}});
+})
 
 function migrateToOrder() {
   var cur = Slides.find({},{sort: {ind:1}});
@@ -193,12 +198,14 @@ Meteor.methods({
   },
   removeUser: function(userId) {
     removeUser(userId);
+  },
+  getUsers: function() {
+    return Meteor.users.find().fetch();
+    // use Meteor.call('getUsers',function(err,data) {Session.set('meteorUsers',data)}) on the client
   }
 });
 
 // Accounts.onCreateUser(function(options,user) {
 //   // populate collection with user's slides
 //   // I was thinking one big collection... 
-//   // check that profile/services are non-empty
-//   // hopefully it won't be an issue...
 // });

@@ -32,7 +32,8 @@ Deps.autorun(function () {
 // });
 //})
 
-Meteor.subscribe("directory");
+// Meteor.subscribe("directory");
+Meteor.subscribe("userInDetail");
 
 Meteor.Router.add({
   '/':'view_edit',
