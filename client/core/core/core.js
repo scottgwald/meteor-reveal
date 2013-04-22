@@ -3,6 +3,7 @@ Session.set('configLoaded',false);
 Slides = new Meteor.Collection('slides');
 Config = new Meteor.Collection('config');
 Directory = new Meteor.Collection('directory');
+currentSlides = new Meteor.Collection('current-slides');
 Session.set('notFoundId', "xxxx");
 Session.set('notFoundInd', 9999);
 Session.set('notFoundText', "No slide here!");
@@ -18,6 +19,7 @@ Deps.autorun(function () {
     Meteor.subscribe('configForUser', function onComplete() {
       if (Config.find({}).count()===0) {
         console.log("creating new config object for user "+Meteor.userId());
+        // could eliminate the extra "owner" index, and just index by userId...
         Config.insert({owner:Meteor.userId(),id:Session.get('notFoundId')});
         // Config.insert({owner:Meteor.userId(),id:Slides.findOne({})._id});
       };
@@ -25,6 +27,7 @@ Deps.autorun(function () {
     });
   } else {
     Session.set("configLoaded",false);
+    Session.set("configID",undefined);
   }
 });
 
@@ -33,9 +36,11 @@ Deps.autorun(function () {
 // });
 //})
 
+Meteor.subscribe("config");
 // Meteor.subscribe("directory-email");
 Meteor.subscribe("directory-name-email");
 Meteor.subscribe("userInDetail");
+Meteor.subscribe('all-users-current-slides');
 
 Meteor.Router.add({
   '/':'view_edit',
@@ -43,6 +48,11 @@ Meteor.Router.add({
   '/edit': 'view_edit', // renders template 'news'
 
   '/reveal': 'reveal',
+
+  '/all': function() {
+    Session.set('slideDeck','onePerUser');
+    return 'reveal_arg';
+  },
 
   '/revealp': 'reveal_panels',
 

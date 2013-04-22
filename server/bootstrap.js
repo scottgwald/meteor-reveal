@@ -69,6 +69,44 @@ Meteor.publish("directory-name-email", function () {
   });
 });
 
+// downside of this as we scale is that each user needs its own process
+// but is that the case anyway when you're keeping a socket alive for each user?
+//
+// changes happen when someone changes their current slide
+Meteor.publish("all-users-current-slides", function () {
+  var self = this;
+  var initializing = true; 
+  // fields prevents future additional config fields from triggering
+  var handle = Config.find({},{fields: {owner:1, ind: 1,id: 1}}).observeChanges({
+    // added: initialization, or when a new user is created.
+    added: function (doc, idx) {
+      //this doc is the id of a config object.
+      var theSlide = Slides.findOne(idx.id); // probably want some error-catching here.
+      // forget about index for now
+      self.added("current-slides", theSlide.owner /* will be `doc` */ , theSlide);
+    },
+    // when a user is removed ... will almost never happen
+    removed: function (doc, idx) {
+      if (! idx.owner === undefined)
+      self.removed("current-slides", idx.owner);
+    },
+    // just rewrite the whole slide object if there are any changes
+    // remember, doc and idx are the Config object, not the slide.
+    changed: function (doc, idx) {
+      var theSlide = Slides.findOne(idx.id); // probably want some error-catching here.
+      console.log("About to change slide "+theSlide.owner+".");
+      self.changed("current-slides", theSlide.owner /* will be `doc` */, theSlide);      
+    }
+  });
+  initializing = false;
+  self.ready();
+  self.onStop( function() {
+    handle.stop();
+  });
+});
+
+// Config.findOne(Session.get('configID')).id;
+
 function migrateToOrder() {
   var cur = Slides.find({},{sort: {ind:1}});
   var i = 0;
