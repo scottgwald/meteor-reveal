@@ -2,6 +2,7 @@
 Session.set('configLoaded',false);
 Slides = new Meteor.Collection('slides');
 Config = new Meteor.Collection('config');
+Directory = new Meteor.Collection('directory');
 Session.set('notFoundId', "xxxx");
 Session.set('notFoundInd', 9999);
 Session.set('notFoundText', "No slide here!");
@@ -32,7 +33,8 @@ Deps.autorun(function () {
 // });
 //})
 
-// Meteor.subscribe("directory");
+// Meteor.subscribe("directory-email");
+Meteor.subscribe("directory-name-email");
 Meteor.subscribe("userInDetail");
 
 Meteor.Router.add({

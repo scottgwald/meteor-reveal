@@ -28,6 +28,46 @@ Meteor.publish("userInDetail", function() {
   return Meteor.users.find(this.userId);
   // return Meteor.users.find({_id:this.userId}).fetch(); //, {fields: {'createdAt':1, 'services.password':1}});
 })
+ 
+Meteor.publish("directory-email", function () {
+  var self = this;
+  var initializing = true;
+  var handle = Meteor.users.find({}).observeChanges({
+    added: function (doc, idx) {
+      console.log("doc is "+doc);
+      console.log("idx is "+idx);
+      self.added("directory", doc, {user: doc, email: idx.emails[0].address});
+    },
+    removed: function (doc, idx) {
+      self.removed("directory", doc._id); // correct syntax?
+    }
+    // ignore changed for now
+  });
+  initializing = false;
+  self.ready();
+  self.onStop( function() {
+    handle.stop();
+  });
+});
+
+Meteor.publish("directory-name-email", function () {
+  var self = this;
+  var initializing = true;
+  var handle = Meteor.users.find().observeChanges({
+    added: function (doc, idx) {
+      self.added("directory",doc, {user: doc, name: idx.profile.name, email: idx.services.google.email});
+    },
+    removed: function (doc, idx) {
+      self.removed("directory", doc._id); // correct syntax?
+    }
+    // ignore changed for now
+  });
+  initializing = false;
+  self.ready();
+  self.onStop( function() {
+    handle.stop();
+  });
+});
 
 function migrateToOrder() {
   var cur = Slides.find({},{sort: {ind:1}});
