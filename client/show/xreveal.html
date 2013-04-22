@@ -44,7 +44,7 @@
         <h3>by Scott Greenwald</h3>
       </section>
       {{#each slides}}
-        {{> reveal_slide}}
+        {{> reveal_arg_slide}}
       {{/each}}
     </div>
   </div>
@@ -92,6 +92,13 @@
 <template name="reveal_slide">
   <section>
     <h1>{{text}}</h1>
+  </section>
+</template>
+
+<template name="reveal_arg_slide">
+  <section>
+    <h1>{{text}}</h1>
+    <h3>{{user}}</h3>
   </section>
 </template>
 

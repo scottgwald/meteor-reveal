@@ -45,6 +45,10 @@ Template.reveal_arg.slides = function () {
   }
 };
 
+Template.reveal_arg_slide.user = function() {
+  return Directory.findOne(this.owner).email;
+}
+
 Template.reveal.ind = function () {return 1};
 
 Template.reveal_panels.text = function () {
