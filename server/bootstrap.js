@@ -80,16 +80,23 @@ Meteor.publish("all-users-current-slides", function () {
   var handle = Config.find({},{fields: {owner:1, ind: 1,id: 1}}).observeChanges({
     // added: initialization, or when a new user is created.
     added: function (doc, idx) {
+      if (!configIsValid(idx)) {
+        console.log("Skipping invalid config object "+doc+".");
+        return null;
+      };
+      console.log("Adding "+doc+" with idx "+JSON.stringify(idx));
       //this doc is the id of a config object.
       var defaultSlide = {owner: idx.owner, text: "Nothing to say yet.", ind:1729};
-      try {
-        var theSlide = Slides.findOne(idx.id);
-      }  catch(e) {
+      var curs = Slides.find(idx.id);
+      if (curs.count()===0) {
         console.log("No slide found for user "+idx.owner+".");
         console.log("Using default.");
         var theSlide = {owner: idx.owner, text: "Nothing to say yet.", ind:1729};
+      } else {
+        var theSlide = Slides.findOne(idx.id);
       }
-      if (theSlide === undefined || theSlide.owner === undefined || theSlide.text === undefined) {
+      // should move slide validity checking onto common ground, and use it here.
+      if (theSlide === undefined || (!(theSlide.hasOwnProperty('owner'))) || (!(theSlide.hasOwnProperty('text')))) {
         console.log("Got a bad slide, argh! "+theSlide+".");
         theSlide = defaultSlide;
       }
@@ -215,20 +222,32 @@ Meteor.startup(function () {
     }
   }
 
-  if (Config.find().count() === 0) {
-    Config.insert({n:5});
-    // Config.insert({currentSlide: 0});
-  }
+  // if (Config.find().count() === 0) {
+  //   Config.insert({n:5});
+  //   // Config.insert({currentSlide: 0});
+  // }
 
-  var config = Config.findOne({});
-  if (config.id === undefined) {
-    console.log("config.id was undefined.");
-    var newId = Slides.findOne({})._id;
-    console.log("setting config.id to "+newId+".");
-    Config.update(config.id, {$set: {id: newId}});
-  } else {
-    console.log("config.id defined: "+config.id+".");
-  }
+  // var config = Config.findOne({});
+  // if (config.id === undefined) {
+  //   console.log("config.id was undefined.");
+  //   var newId = Slides.findOne({})._id;
+  //   console.log("setting config.id to "+newId+".");
+  //   Config.update(config.id, {$set: {id: newId}});
+  // } else {
+  //   console.log("config.id defined: "+config.id+".");
+  // }
+
+  //fails to check for orphaned config objects...
+  var curs = Config.find();
+  curs.forEach( function (conf){
+    console.log("Config object has owner "+conf.owner+" and id "+conf._id);
+  });
+
+  var curs = Meteor.users.find();
+  curs.forEach(function (user) {
+    console.log("Doing checkrep for user "+user._id+".");
+    getOrCreateConfigId(user._id);
+  });
 
   // TODO: collectionsCheckrep();
 

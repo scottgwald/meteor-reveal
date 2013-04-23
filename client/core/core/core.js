@@ -1,3 +1,10 @@
+// TODO: WHAT IF USER ISN'T LOGGED IN, BUT TRIES TO CREATE A SLIDE?
+// ADD TO ROUTER.
+
+
+// LOGIN IS HANGING ... 
+//
+
 //Meteor.startup( function() {
 Session.set('configLoaded',false);
 Slides = new Meteor.Collection('slides');
@@ -10,22 +17,27 @@ Session.set('notFoundText', "No slide here!");
 Session.set('currentSlide',Session.get('notFoundId'));
 //Session.set('panelIndex',0);
 
-// Meteor.subscribe('slides');
-
 Deps.autorun(function () {
   if (Meteor.userId()) {
-    Meteor.subscribe('slidesForUser');
+    // upon login
+    Meteor.subscribe('slidesForUser', function onComplete() {
+      // this should be superfluous with auto-new-insert in getOrCreateConfigId
+      if (Slides.find({}).count()===0) {
+        Slides.insert(defaultSlide(Meteor.userId()));
+      }
+    });
     Meteor.call('fixMyOrder');
+    // Session.set('configLoaded',false); //done at the top.
     Meteor.subscribe('configForUser', function onComplete() {
-      if (Config.find({}).count()===0) {
-        console.log("creating new config object for user "+Meteor.userId());
-        // could eliminate the extra "owner" index, and just index by userId...
-        Config.insert({owner:Meteor.userId(),id:Session.get('notFoundId')});
-        // Config.insert({owner:Meteor.userId(),id:Slides.findOne({})._id});
-      };
-      revealInit();
+      var configId = getOrCreateConfigId(Meteor.userId()); // any good reason to pass it in?
+      // TODO TODO TODO: replace all occurrences of configID with configId, for consistency.
+      Session.set('configID',configId);
+      Session.set('configLoaded',true);
+      // revealInit();
+      Meteor.subscribe('all-users-current-slides');
     });
   } else {
+    // upon logout
     Session.set("configLoaded",false);
     Session.set("configID",undefined);
   }
@@ -36,11 +48,12 @@ Deps.autorun(function () {
 // });
 //})
 
-Meteor.subscribe("config");
+// IF DEBUG
+// Meteor.subscribe("config");
+
 // Meteor.subscribe("directory-email");
 Meteor.subscribe("directory-name-email");
 Meteor.subscribe("userInDetail");
-Meteor.subscribe('all-users-current-slides');
 
 Meteor.Router.add({
   '/':'view_edit',

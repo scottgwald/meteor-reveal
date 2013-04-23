@@ -45,8 +45,19 @@ Template.reveal_arg.slides = function () {
   }
 };
 
+dirUserExists = function(userId) {
+    return (!(Directory.find(userId).count() === 0));
+}
+
+// could check if "this" is undefined..
 Template.reveal_arg_slide.user = function() {
-  return Directory.findOne(this.owner).email;
+  if (this.hasOwnProperty('owner') && dirUserExists(this.owner)) {
+    var userObj = Directory.findOne(this.owner);
+    if (userObj.hasOwnProperty('email')) {
+      return userObj.email;
+    }
+  }
+  return "No email available.";
 }
 
 Template.reveal.ind = function () {return 1};
