@@ -81,21 +81,40 @@ Meteor.publish("all-users-current-slides", function () {
     // added: initialization, or when a new user is created.
     added: function (doc, idx) {
       //this doc is the id of a config object.
-      var theSlide = Slides.findOne(idx.id); // probably want some error-catching here.
+      var defaultSlide = {owner: idx.owner, text: "Nothing to say yet.", ind:1729};
+      try {
+        var theSlide = Slides.findOne(idx.id);
+      }  catch(e) {
+        console.log("No slide found for user "+idx.owner+".");
+        console.log("Using default.");
+        var theSlide = {owner: idx.owner, text: "Nothing to say yet.", ind:1729};
+      }
+      if (theSlide === undefined || theSlide.owner === undefined || theSlide.text === undefined) {
+        console.log("Got a bad slide, argh! "+theSlide+".");
+        theSlide = defaultSlide;
+      }
+      // probably want some error-catching here.
       // forget about index for now
+      console.log("This is the slide "+JSON.stringify(theSlide)+".");
       self.added("current-slides", theSlide.owner /* will be `doc` */ , theSlide);
     },
     // when a user is removed ... will almost never happen
     removed: function (doc, idx) {
-      if (! idx.owner === undefined)
-      self.removed("current-slides", idx.owner);
+      if (!(idx.owner === undefined)) {
+        self.removed("current-slides", idx.owner);
+      }
     },
     // just rewrite the whole slide object if there are any changes
     // remember, doc and idx are the Config object, not the slide.
     changed: function (doc, idx) {
       var theSlide = Slides.findOne(idx.id); // probably want some error-catching here.
       console.log("About to change slide "+theSlide.owner+".");
-      self.changed("current-slides", theSlide.owner /* will be `doc` */, theSlide);      
+      try {
+        self.changed("current-slides", theSlide.owner /* will be `doc` */, theSlide);              
+      } catch(e) {
+        console.log(e);
+        self.added("current-slides", theSlide.owner /* will be `doc` */, theSlide);                      
+      }
     }
   });
   initializing = false;
@@ -144,6 +163,25 @@ function pruneMalformedUsers() {
   })
 }
 
+function pruneMalformedConfigs() {
+  var configs = Config.find();
+  configs.map(function (conf) {
+    if (conf.owner === undefined || conf.id === undefined) {
+      console.log("Removing malformed config object with id "+conf._id+".");
+      Config.remove(conf._id);
+    };
+    if (Meteor.users.findOne(conf.owner) === undefined) {
+      console.log("Removing orphaned config object with id "+conf._id+".");
+      Config.remove(conf._id);
+    };
+    if (Slides.findOne(conf.id) === undefined) {
+      console.log("Removing config object that refers to unknown slide"+conf._id+".");
+      Config.remove(conf._id);      
+    }
+  })
+}
+
+// todo: remove config object also
 function removeUser(userId) {
   var user = Meteor.users.findOne(userId);
   try {
@@ -280,6 +318,13 @@ Meteor.methods({
   getUsers: function() {
     return Meteor.users.find().fetch();
     // use Meteor.call('getUsers',function(err,data) {Session.set('meteorUsers',data)}) on the client
+  },
+  getConfigs: function() {
+    return Config.find().fetch();
+    // use Meteor.call('getConfigs',function(err,data) {Session.set('meteorConfig',data)})
+  },
+  pruneMalformedConfigs: function () {
+    pruneMalformedConfigs();
   }
 });
 
