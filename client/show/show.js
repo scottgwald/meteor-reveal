@@ -171,6 +171,8 @@ revealArgRendered = function() {
     center: true,
     // width: "40%",
     idSel: "",
+    autoSlide: 5000,
+    loop: true,
 
     theme: document.Reveal.getQueryHash().theme, // available themes are in /css/theme
     transition: document.Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
