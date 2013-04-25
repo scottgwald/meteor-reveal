@@ -50,18 +50,28 @@ dirUserExists = function(userId) {
 }
 
 // could check if "this" is undefined..
-Template.reveal_arg_slide.user = function() {
+Template.reveal_arg_slide.user = function () {
   if (this.hasOwnProperty('owner') && dirUserExists(this.owner)) {
     var userObj = Directory.findOne(this.owner);
-    if (userObj.hasOwnProperty('name')) {
-      return userObj.name;
-    }
-    if (userObj.hasOwnProperty('email')) {
-      return userObj.email;
+    if (userObj.hasOwnProperty('displayName')) {
+      return userObj.displayName;
     }
   }
-  return "No user available.";
+  return "No display name available."; //shouldn't happen
 }
+
+// Template.reveal_arg_slide.user = function() {
+//   if (this.hasOwnProperty('owner') && dirUserExists(this.owner)) {
+//     var userObj = Directory.findOne(this.owner);
+//     if (userObj.hasOwnProperty('name') && !(userObj.name===undefined)) {
+//       return userObj.name;
+//     }
+//     if (userObj.hasOwnProperty('email')) {
+//       return userObj.email;
+//     }
+//   }
+//   return "No user available.";
+// }
 
 Template.reveal.ind = function () {return 1};
 

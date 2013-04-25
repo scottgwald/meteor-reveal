@@ -55,7 +55,33 @@ Meteor.publish("directory-name-email", function () {
   var initializing = true;
   var handle = Meteor.users.find().observeChanges({
     added: function (doc, idx) {
-      self.added("directory",doc, {user: doc, name: idx.profile.name, email: idx.services.google.email});
+      var email;
+      try {
+        email = idx.services.google.email;
+      } catch(e) {
+        try {
+          email = idx.emails[0].address;
+        } catch(e) {
+        }
+      } finally {
+        if (email === undefined) {
+          email = "none@giv.en";
+        }
+      }
+      var name;
+      try {
+        name = idx.profile.name;
+      } catch(e) {
+        name = undefined;
+      }
+      var displayName;
+      if (name===undefined) {
+        displayName = email;
+      } else {
+        displayName = name;
+      }
+      self.added("directory",doc, {user: doc, name: name, email: email, displayName: displayName});
+      // self.added("directory",doc, {user: doc, name: idx.profile.name, email: idx.services.google.email});
     },
     removed: function (doc, idx) {
       self.removed("directory", doc._id); // correct syntax?
