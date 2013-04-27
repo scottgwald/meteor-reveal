@@ -1,3 +1,38 @@
+getScript = function(scriptName) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('GET', scriptName, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+}
+
+menuBodyCreated = function () {
+  console.log("Created menu_body.");
+  eval(getScript('/js/meny.min.js'));
+  document.Meny = Meny;
+
+}
+
+Template.menu_body.created = menuBodyCreated;
+
+Template.menu_body.rendered = function() {
+  var meny = document.Meny.create({
+    // The element that will be animated in from off screen
+    menuElement: document.querySelector( '.meny' ),
+
+    // The contents that gets pushed aside while Meny is active
+    contentsElement: document.querySelector( '.theContents' ),
+
+    // The alignment of the menu (top/right/bottom/left)
+    position: 'left',
+
+    // The height of the menu (when using top/bottom position)
+    height: 200,
+
+    // The width of the menu (when using left/right position)
+    width: 260
+  });
+}
+
 Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})};
 
 // Template.slide.events({
