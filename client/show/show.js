@@ -91,7 +91,8 @@ revealCreated = function() {
   console.log("Reveal template instantiated.");
   eval(getScript('/js/reveal.min.js'));
   document.Reveal = Reveal;
-  console.log(Reveal);  
+  console.log(Reveal);
+  // addAutoToggle();  
 }
 
 revealsCreated = function() {
@@ -116,6 +117,37 @@ Template.reveals.created = revealsCreated;
 //   document.Reveal = Reveal;
 //   console.log(Reveal);
 // }
+
+initializeButtonPanel = function () {
+  console.log("Initializing button panel.");
+  if (!(document.Reveal.getConfig().autoSlide === 0)) {
+    $('.auto-button').addClass('enabled');
+  }
+}
+
+// Template.button_panel.initialize = function () {
+//   console.log("Initializing button panel.");
+//   if (!(document.Reveal.getConfig().autoSlide === 0)) {
+//     $('.auto-button').addClass('enabled');
+//   }
+// }
+
+Template.button_panel.events({
+  'click .button-panel .auto-button': function (event) {
+    console.log("Clicked auto-button element.");
+    // console.log(event.target);
+    // console.log($(event.target).hasClass('auto-button'));
+    var self = $(event.target);
+    self.toggleClass('enabled');
+    if (self.hasClass('enabled')) {
+      document.Reveal.configure({autoSlide: 20000, loop: true});
+    } else {
+      document.Reveal.configure({autoSlide: 0});
+    }
+  }
+    // if (event.target.)
+    // $(this.id).toggleClass('enabled');
+});
 
 revealRendered = function() {
   /**
@@ -151,6 +183,8 @@ revealRendered = function() {
     // console.log("setting hash to "+curr);
     window.location.hash = "#/"+curr;  
   }  
+  initializeButtonPanel();
+  // addAutoToggle();
 }
 
 revealArgRendered = function() {
@@ -189,6 +223,7 @@ revealArgRendered = function() {
   //   // console.log("setting hash to "+curr);
   //   window.location.hash = "#/"+curr;  
   // }  
+  initializeButtonPanel();
 }
 
 revealsRendered = function() {

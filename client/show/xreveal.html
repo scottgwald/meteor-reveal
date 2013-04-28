@@ -21,8 +21,13 @@
         {{> reveal_slide}}
       {{/each}}
     </div>
+    {{> button_panel}}
   </div>
+</template>
 
+<template name="button_panel">
+<aside class="button-panel" style="display: block;"><div class="auto-button"></div></aside>
+{{initialize}}
 </template>
 
 <template name="reveal_arg">
@@ -47,6 +52,7 @@
         {{> reveal_arg_slide}}
       {{/each}}
     </div>
+    {{> button_panel}}
   </div>
 
 </template>
