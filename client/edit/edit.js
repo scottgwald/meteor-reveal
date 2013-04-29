@@ -9,28 +9,33 @@ menuBodyCreated = function () {
   console.log("Created menu_body.");
   eval(getScript('/js/meny.min.js'));
   document.Meny = Meny;
+  Session.set('menyLoaded',false);
 
 }
 
 Template.menu_body.created = menuBodyCreated;
 
 Template.menu_body.rendered = function() {
-  var meny = document.Meny.create({
-    // The element that will be animated in from off screen
-    menuElement: document.querySelector( '.meny' ),
+  if (!(Session.get('menyLoaded'))) {
+    console.log("Initializing meny.");
+    meny = document.Meny.create({
+      // The element that will be animated in from off screen
+      menuElement: document.querySelector( '.meny' ),
 
-    // The contents that gets pushed aside while Meny is active
-    contentsElement: document.querySelector( '.theContents' ),
+      // The contents that gets pushed aside while Meny is active
+      contentsElement: document.querySelector( '.theContents' ),
 
-    // The alignment of the menu (top/right/bottom/left)
-    position: 'left',
+      // The alignment of the menu (top/right/bottom/left)
+      position: 'left',
 
-    // The height of the menu (when using top/bottom position)
-    height: 200,
+      // The height of the menu (when using top/bottom position)
+      height: 200,
 
-    // The width of the menu (when using left/right position)
-    width: 260
-  });
+      // The width of the menu (when using left/right position)
+      width: 260
+    });
+    Session.set('menyLoaded',true);
+  }
 }
 
 Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})};
@@ -49,6 +54,16 @@ Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})
 //     }
 //   }
 // });
+
+Template.menu.events({
+  'click a': function() {
+    console.log("Clicked one of the links.");
+    meny.close();
+  },
+  'click h2': function () {
+    console.log("Clicked the heading.");
+  }
+});
 
 Template.slide.events({
   'click .destroy': function () {
