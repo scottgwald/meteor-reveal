@@ -17,7 +17,7 @@
 html,
 body {
 	height: 100%;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 
 /*body {
@@ -51,7 +51,10 @@ h2 {
 
 .meny {
 	display: none;
+	position: fixed; /* see what happens */
+	top: 0px; /* seems to have no effect. argh */
 	padding: 20px;
+	/*overflow:hidden; no effect */
 	overflow: auto;
 	background: #333;
 	color: #eee;
