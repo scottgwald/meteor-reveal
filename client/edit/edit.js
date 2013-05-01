@@ -32,7 +32,8 @@ Template.menu_body.rendered = function() {
       height: 200,
 
       // The width of the menu (when using left/right position)
-      width: 260
+      width: 260,
+      overlap: 5
     });
     Session.set('menyLoaded',true);
   }
