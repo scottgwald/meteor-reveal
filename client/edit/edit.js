@@ -208,16 +208,16 @@ Template.slide_list.events(okCancelEvents(
         spaceAt = parseInt(slideInd(Session.get('selectedSlide')))+1;
       }
       // insert high, so it goes right to the right place
-      var newId = Slides.insert({
-        text: text,
-        ind: spaceAt-1,
-        owner: Meteor.userId()
-      });
-      // adjust when the remote call returns.
       Meteor.call('shiftUpLI',spaceAt, function(error,result) {
-        Slides.update(newId,{$set: {ind:spaceAt}});          
+        var newId = Slides.insert({
+          text: text,
+          ind: spaceAt,
+          owner: Meteor.userId()
+        });
+        // adjust when the remote call returns.
+        // Slides.update(newId,{$set: {ind:spaceAt}});          
+        Session.set('selectedSlide',newId);
       });
-      Session.set('selectedSlide',newId);
       evt.target.value = ''; // I think this was some magic so touch punch would work.
     }
   }
