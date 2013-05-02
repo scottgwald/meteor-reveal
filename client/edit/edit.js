@@ -16,6 +16,16 @@ menuBodyCreated = function () {
 Template.menu_body.created = menuBodyCreated;
 
 Template.menu_body.rendered = function() {
+  console.log("Menu_body loaded.");
+  if ($('.meny').css('display')==="none") {
+    console.log("Where my meny man?");
+    $('body').removeClass('meny-left');
+    if (!(typeof meny === 'undefined')) {
+      console.log("Clearin out the old meny.");
+      delete meny;
+    }
+    Session.set('menyLoaded',false);
+  }
   if (!(Session.get('menyLoaded'))) {
     console.log("Initializing meny.");
     meny = document.Meny.create({
