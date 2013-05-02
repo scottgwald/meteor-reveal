@@ -192,7 +192,7 @@ Template.slide_list.events(okCancelEvents(
   {
     ok: function (text, evt) {
       if (Session.get('selectedSlide') === undefined) {
-        Meteor.call('shiftUp');
+        Meteor.call('shiftUpLI');
         Slides.insert({
           text: text,
           ind: 0, //Slides.find().count()
@@ -200,11 +200,15 @@ Template.slide_list.events(okCancelEvents(
         });
       } else {
         var spaceAt = parseInt(slideInd(Session.get('selectedSlide')))+1;
-        Meteor.call('shiftUp',spaceAt);
+        // console.log("inserting at position "+(spaceAt-1)+".");
         var newId = Slides.insert({
           text: text,
-          ind: spaceAt,
+          ind: spaceAt-1,
           owner: Meteor.userId()
+        });
+        Meteor.call('shiftUpLI',spaceAt, function(error,result) {
+          // console.log("and happily moving up to "+spaceAt+".");
+          Slides.update(newId,{$set: {ind:spaceAt}});          
         });
         Session.set('selectedSlide',newId);
       }
