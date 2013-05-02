@@ -201,53 +201,26 @@ Template.slide_list.events(okCancelEvents(
   '#new-slide',
   {
     ok: function (text, evt) {
+      var spaceAt;
       if (Session.get('selectedSlide') === undefined) {
-        Meteor.call('shiftUpLI');
-        Slides.insert({
-          text: text,
-          ind: 0, //Slides.find().count()
-          owner: Meteor.userId()
-        });
+        spaceAt = 0;
       } else {
-        var spaceAt = parseInt(slideInd(Session.get('selectedSlide')))+1;
-        // console.log("inserting at position "+(spaceAt-1)+".");
-        var newId = Slides.insert({
-          text: text,
-          ind: spaceAt-1,
-          owner: Meteor.userId()
-        });
-        Meteor.call('shiftUpLI',spaceAt, function(error,result) {
-          // console.log("and happily moving up to "+spaceAt+".");
-          Slides.update(newId,{$set: {ind:spaceAt}});          
-        });
-        Session.set('selectedSlide',newId);
+        spaceAt = parseInt(slideInd(Session.get('selectedSlide')))+1;
       }
+      // insert high, so it goes right to the right place
+      var newId = Slides.insert({
+        text: text,
+        ind: spaceAt-1,
+        owner: Meteor.userId()
+      });
+      // adjust when the remote call returns.
+      Meteor.call('shiftUpLI',spaceAt, function(error,result) {
+        Slides.update(newId,{$set: {ind:spaceAt}});          
+      });
+      Session.set('selectedSlide',newId);
       evt.target.value = ''; // I think this was some magic so touch punch would work.
     }
   }
 ));
 
-// Template.slide_list.events(okCancelEvents(
-//   '#new-slide',
-//   {
-//     ok: function (text, evt) {
-//       if (Session.get('selectedSlide') === undefined) {
-//         Meteor.call('shiftUp');
-//         Slides.insert({
-//           text: text,
-//           ind: 0 //Slides.find().count()
-//         });
-//       } else {
-//         var spaceAt = parseInt(slideInd(Session.get('selectedSlide')))+1;
-//         Meteor.call('shiftUp',spaceAt);
-//         var newId = Slides.insert({
-//           text: text,
-//           ind: spaceAt
-//         });
-//         Session.set('selectedSlide',newId);
-//       }
-//       evt.target.value = ''; // I think this was some magic so touch punch would work.
-//     }
-//   }
-// ));
 
