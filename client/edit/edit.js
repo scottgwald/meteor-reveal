@@ -15,6 +15,24 @@ menuBodyCreated = function () {
 
 Template.menu_body.created = menuBodyCreated;
 
+Template.view_edit.created = function () {
+  console.log('Created view_edit.');
+  Session.set('viewEditRendered',false);
+}
+
+Template.view_edit.rendered = function () {
+  if(!(Session.get('viewEditRendered'))) {
+    console.log("Makin sure this bizzy will scroll.");
+    console.log("Property set to "+$('.theContents').css('overflow')+" but I'm setting it to 'visible'.");
+    $('.theContents').css('overflow','visible');  
+    Session.set('viewEditRendered',true);  
+  }  
+}
+
+Template.menu.rendered = function () {
+  console.log("Menu rendered.");
+}
+
 Template.menu_body.rendered = function() {
   console.log("Menu_body loaded.");
   if ($('.meny').css('display')==="none") {
