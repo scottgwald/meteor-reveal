@@ -13,9 +13,9 @@
     {{> menu}}
   </div>
   <div class="theContents">
-    {{#isolate}}
+    {{!#isolate}}
     {{renderPage}}
-    {{/isolate}}
+    {{!/isolate}}
   </div>
 </template>
 
@@ -50,7 +50,6 @@
 			{{> slide}}
 		{{/each}}
 	</ul>
-  {{highlightCurrent}}
 </template>
 
 <template name="slide">

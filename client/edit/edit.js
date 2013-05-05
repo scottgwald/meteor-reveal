@@ -5,67 +5,67 @@ getScript = function(scriptName) {
     return xmlHttp.responseText;
 }
 
-menuBodyCreated = function () {
-  console.log("Created menu_body.");
-  eval(getScript('/js/meny.min.js'));
-  document.Meny = Meny;
-  Session.set('menyLoaded',false);
+// menuBodyCreated = function () {
+//   console.log("Created menu_body.");
+//   eval(getScript('/js/meny.min.js'));
+//   document.Meny = Meny;
+//   Session.set('menyLoaded',false);
 
-}
+// }
 
-Template.menu_body.created = menuBodyCreated;
+// Template.menu_body.created = menuBodyCreated;
 
-Template.view_edit.created = function () {
-  console.log('Created view_edit.');
-  Session.set('viewEditRendered',false);
-}
+// Template.view_edit.created = function () {
+//   console.log('Created view_edit.');
+//   Session.set('viewEditRendered',false);
+// }
 
-Template.view_edit.rendered = function () {
-  if(!(Session.get('viewEditRendered'))) {
-    console.log("Makin sure this bizzy will scroll.");
-    console.log("Property set to "+$('.theContents').css('overflow')+" but I'm setting it to 'visible'.");
-    $('.theContents').css('overflow','visible');  
-    Session.set('viewEditRendered',true);  
-  }  
-}
+// Template.view_edit.rendered = function () {
+//   if(!(Session.get('viewEditRendered'))) {
+//     console.log("Makin sure this bizzy will scroll.");
+//     console.log("Property set to "+$('.theContents').css('overflow')+" but I'm setting it to 'visible'.");
+//     $('.theContents').css('overflow','visible');  
+//     Session.set('viewEditRendered',true);  
+//   }  
+// }
 
 Template.menu.rendered = function () {
   console.log("Menu rendered.");
 }
 
-Template.menu_body.rendered = function() {
-  console.log("Menu_body loaded.");
-  if ($('.meny').css('display')==="none") {
-    console.log("Where my meny man?");
-    $('body').removeClass('meny-left');
-    if (!(typeof meny === 'undefined')) {
-      console.log("Clearin out the old meny.");
-      delete meny;
-    }
-    Session.set('menyLoaded',false);
-  }
-  if (!(Session.get('menyLoaded'))) {
-    console.log("Initializing meny.");
-    meny = document.Meny.create({
-      // The element that will be animated in from off screen
-      menuElement: document.querySelector( '.meny' ),
+// Template.menu_body.rendered = function() {
+//   console.log("Menu_body loaded.");
+//   if ($('.meny').css('display')==="none") {
+//     console.log("Where my meny man?");
+//     $('body').removeClass('meny-left');
+//     if (!(typeof meny === 'undefined')) {
+//       console.log("Clearin out the old meny.");
+//       delete meny;
+//     }
+//     Session.set('menyLoaded',false);
+//   }
+//   if (!(Session.get('menyLoaded'))) {
+//     console.log("Initializing meny.");
+//     meny = document.Meny.create({
+//       // The element that will be animated in from off screen
+//       menuElement: document.querySelector( '.meny' ),
 
-      // The contents that gets pushed aside while Meny is active
-      contentsElement: document.querySelector( '.theContents' ),
+//       // The contents that gets pushed aside while Meny is active
+//       contentsElement: document.querySelector( '.theContents' ),
 
-      // The alignment of the menu (top/right/bottom/left)
-      position: 'left',
+//       // The alignment of the menu (top/right/bottom/left)
+//       position: 'left',
 
-      // The height of the menu (when using top/bottom position)
-      height: 200,
+//       // The height of the menu (when using top/bottom position)
+//       height: 200,
 
-      // The width of the menu (when using left/right position)
-      width: 260,
-      overlap: 5
-    });
-    Session.set('menyLoaded',true);
-  }
-}
+//       // The width of the menu (when using left/right position)
+//       width: 260,
+//       overlap: 5
+//     });
+//     Session.set('menyLoaded',true);
+//   }
+// }
 
 Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})};
 
@@ -84,15 +84,15 @@ Template.slide_list.slides = function () {return Slides.find({},{sort: {ind:1}})
 //   }
 // });
 
-Template.menu.events({
-  'click a': function() {
-    console.log("Clicked one of the links.");
-    meny.close();
-  },
-  'click h2': function () {
-    console.log("Clicked the heading.");
-  }
-});
+// Template.menu.events({
+//   'click a': function() {
+//     console.log("Clicked one of the links.");
+//     meny.close();
+//   },
+//   'click h2': function () {
+//     console.log("Clicked the heading.");
+//   }
+// });
 
 Template.slide.events({
   'click .destroy': function () {
