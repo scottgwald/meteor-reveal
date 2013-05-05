@@ -2,33 +2,7 @@
 	<title>Meteor Slides</title>
 </head>
 
-<body>
-  {{loginButtons align="right"}}
-  {{>menu_body}}
-  {{!>logs_bootstrap}}
-</body>
 
-<template name="menu_body">
-  <div class="meny">
-    {{> menu}}
-  </div>
-  <div class="theContents">
-    {{!#isolate}}
-    {{renderPage}}
-    {{!/isolate}}
-  </div>
-</template>
-
-<template name="menu">
-  <h2>RevealMe</h2>
-  <ul>
-    <li><a href="/edit">Edit My Slides</a></li>
-    <li><a href="/reveal">My Show</a></li>
-    <li><a href="/all">Public Show</a></li>
-    <li><a href="/revealp">Simple Panels</a></li>
-    <!-- <li><a href="/reveals">Reveal Panels</a></li> -->
-  </ul>
-</template>
 
 <template name="view_edit">
   <div id="show-nav">{{> show_nav}}</div>
