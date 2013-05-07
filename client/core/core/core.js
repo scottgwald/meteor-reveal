@@ -66,6 +66,10 @@ Meteor.Router.add({
     Session.set('slideDeck','onePerUser');
     return 'reveal_arg';
   },
+  '/custom': function() {
+    Session.set('slideDeck','handSelected');
+    return 'reveal_arg';
+  },
 
   '/revealp': 'reveal_panels',
 

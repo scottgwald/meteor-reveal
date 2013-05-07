@@ -15,7 +15,7 @@ Template.menu_body.created = function() {
 	logger.enableLogger();
 	console.log('This will show up!');
 
-	logger.disableLogger();
+	// logger.disableLogger();
 }
 
 Template.menu_body.rendered = function() {

@@ -44,6 +44,13 @@ Template.reveal_arg.slides = function () {
       console.log("Case onePerUser activated.");
       return currentSlides.find({});
       break;
+    case 'handSelected':
+      console.log("Case handSelected activated");
+      // grab three random people
+      var crs = Directory.find({},{limit:5});
+      var usr = crs.map(function (user) {return user._id});
+      Session.set('handSelected',usr);
+      return currentSlides.find({owner: {$in: Session.get('handSelected')}});
     default:
       return Slides.find({},{sort: {ind:1}});
       break;
