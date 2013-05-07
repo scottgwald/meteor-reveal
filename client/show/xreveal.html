@@ -27,7 +27,6 @@
 
 <template name="button_panel">
 <aside class="button-panel" style="display: block;"><div class="auto-button"></div></aside>
-{{initialize}}
 </template>
 
 <template name="reveal_arg">
@@ -55,7 +54,17 @@
     </div>
     {{> button_panel}}
   </div>
+  {{#constant}}
+    <ol class="select-people">
+      {{#each people}}
+        {{> person}}
+      {{/each}}
+    </ol>
+  {{/constant}}
+</template>
 
+<template name="person">
+  <li id={{_id}}>{{displayName}}</li>
 </template>
 
 <template name="reveals">

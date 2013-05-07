@@ -1,5 +1,5 @@
 /*********************************************
- * Botton Panel: (from reveal.css)
+ * Button Panel: (from reveal.css)
  *********************************************/
 .reveal .button-panel {
   display: none;
@@ -13,6 +13,7 @@
 
 .reveal .button-panel div {
   position: absolute;
+  cursor: pointer;
   opacity: 0.5;
   width: 0px;
   height: 0px;
@@ -34,3 +35,19 @@
 .reveal .button-panel .auto-button {
   top: 25px; }
 
+/*********************************************
+ * Select People: (from reveal.css)
+ *********************************************/
+
+.select-people {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 11;
+  background: #cccccc;
+  cursor: pointer;
+}
+
+.select-people .ui-selected {
+  background: #ccffcc;
+}

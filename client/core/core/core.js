@@ -67,7 +67,7 @@ Meteor.Router.add({
     return 'reveal_arg';
   },
   '/custom': function() {
-    Session.set('slideDeck','handSelected');
+    Session.set('slideDeck','selectedPeople');
     return 'reveal_arg';
   },
 

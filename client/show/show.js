@@ -44,18 +44,27 @@ Template.reveal_arg.slides = function () {
       console.log("Case onePerUser activated.");
       return currentSlides.find({});
       break;
-    case 'handSelected':
-      console.log("Case handSelected activated");
+    case 'selectedPeople':
+      var usr;
+      console.log("Case selectedPeople activated");
+      if (typeof Session.get('selectedPeople')==='undefined') {
+        usr = Directory.find({}).map(function (user) {return user._id});
+        Session.set('selectedPeople',usr);
+      } 
       // grab three random people
-      var crs = Directory.find({},{limit:5});
-      var usr = crs.map(function (user) {return user._id});
-      Session.set('handSelected',usr);
-      return currentSlides.find({owner: {$in: Session.get('handSelected')}});
+      // var crs = Directory.find({},{limit:5});
+      // var usr = crs.map(function (user) {return user._id});
+      // Session.set('selectedPeople',usr);
+      return currentSlides.find({owner: {$in: Session.get('selectedPeople')}});
     default:
       return Slides.find({},{sort: {ind:1}});
       break;
   }
 };
+
+Template.reveal_arg.people = function() {
+  return Directory.find({});
+}
 
 dirUserExists = function(userId) {
     return (!(Directory.find(userId).count() === 0));
@@ -100,10 +109,12 @@ Template.current_slide.currentSlide = function () {
 }
 
 revealCreated = function() {
+  Session.set("revealReady",false);
   console.log("Reveal template instantiated.");
   eval(getScript('/js/reveal.min.js'));
   document.Reveal = Reveal;
   console.log(Reveal);
+
   // addAutoToggle();  
 }
 
@@ -255,6 +266,26 @@ revealArgRendered = function() {
   //   window.location.hash = "#/"+curr;  
   // }  
   initializeButtonPanel();
+
+  if (!Session.get("revealReady")) {
+    console.log("revealReady was false.");
+    $(function() {
+      console.log("inside the reveal-created jquery ready function.");
+      $(".select-people").bind("mousedown", function (e) {
+        e.metaKey = true;
+      }).selectable({
+        stop: function() {
+          var selectedPeople = [];
+          $(".ui-selected", this).each(function() {
+            var id = $(this).attr('id');
+            selectedPeople.push(id);
+          });
+          Session.set('selectedPeople',selectedPeople);
+        }
+      });
+    });
+  }
+  Session.set("revealReady",true);
 }
 
 revealsRendered = function() {
