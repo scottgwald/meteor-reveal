@@ -266,8 +266,13 @@ revealArgRendered = function() {
   //   window.location.hash = "#/"+curr;  
   // }  
   initializeButtonPanel();
-
+  console.log("The value of revealReady is "+Session.get('revealReady'));
   if (!Session.get("revealReady")) {
+    if (Session.get('slideDeck')==='selectedPeople') {
+      $('.select-people').css('display','block');
+    } else {
+      $('.select-people').css('display','none');
+    }
     console.log("revealReady was false.");
     $(function() {
       console.log("inside the reveal-created jquery ready function.");

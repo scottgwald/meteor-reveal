@@ -63,10 +63,14 @@ Meteor.Router.add({
   '/reveal': 'reveal',
 
   '/all': function() {
+    console.log("Going to /all");
+    Session.set('revealReady',false);
     Session.set('slideDeck','onePerUser');
     return 'reveal_arg';
   },
   '/custom': function() {
+    console.log("Going to /custom");
+    Session.set('revealReady',false);
     Session.set('slideDeck','selectedPeople');
     return 'reveal_arg';
   },
