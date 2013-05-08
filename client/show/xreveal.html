@@ -55,12 +55,16 @@
     {{> button_panel}}
   </div>
   {{#constant}}
-    <ol class="select-people">
-      {{#each people}}
-        {{> person}}
-      {{/each}}
-    </ol>
+  {{> select_people}}
   {{/constant}}
+</template>
+
+<template name="select_people">
+  <ol class="select-people">
+    {{#each people}}
+      {{> person}}
+    {{/each}}
+  </ol>
 </template>
 
 <template name="person">

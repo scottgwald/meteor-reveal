@@ -62,7 +62,7 @@ Template.reveal_arg.slides = function () {
   }
 };
 
-Template.reveal_arg.people = function() {
+Template.select_people.people = function() {
   return Directory.find({});
 }
 
