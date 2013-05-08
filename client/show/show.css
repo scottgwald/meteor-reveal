@@ -35,6 +35,10 @@
 .reveal .button-panel .auto-button {
   top: 25px; }
 
+.reveal .button-panel .select-people-button {
+  top: 55px;
+}
+
 /*********************************************
  * Select People: (from reveal.css)
  *********************************************/
@@ -42,7 +46,7 @@
 .select-people {
   display: none;
   position: absolute;
-  top: 20px;
+  top: 95px;
   right: 20px;
   z-index: 11;
   background: #cccccc;

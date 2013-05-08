@@ -182,6 +182,11 @@ Template.button_panel.events({
       Session.set('publicAutoSlide',0);
       // document.Reveal.configure({autoSlide: 0});
     }
+  },
+  'click .button-panel .select-people-button': function(event) {
+    var self = $(event.target);
+    self.toggleClass('enabled');
+    $('.select-people').toggle();
   }
     // if (event.target.)
     // $(this.id).toggleClass('enabled');
