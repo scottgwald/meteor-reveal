@@ -186,7 +186,12 @@ Template.button_panel.events({
   'click .button-panel .select-people-button': function(event) {
     var self = $(event.target);
     self.toggleClass('enabled');
-    $('.select-people').toggle();
+    if (self.hasClass('enabled')) {
+      $('.select-people').css('display','none');
+    } else {
+      $('.select-people').css('display','block');
+    }
+    // $('.select-people').toggle();
   }
     // if (event.target.)
     // $(this.id).toggleClass('enabled');
