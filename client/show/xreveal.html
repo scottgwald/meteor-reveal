@@ -57,23 +57,21 @@
     </div>
     {{> button_panel}}
   </div>
-  {{!#constant}}
   {{> select_people}}
-  {{!/constant}}
 </template>
 
 <template name="select_people">
-  <ol class="select-people">
-    {{#constant}}
+  <ol class="select-people enabled">
       {{#each people}}
         {{> person}}
       {{/each}}
-    {{/constant}}
   </ol>
 </template>
 
 <template name="person">
+  {{#constant}}
   <li id={{_id}}>{{displayName}}</li>
+  {{/constant}}
 </template>
 
 <template name="reveals">

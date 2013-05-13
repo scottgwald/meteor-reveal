@@ -18,6 +18,21 @@ evalScript = function(scriptName, callback) {
   }
 }
 
+Template.select_people.rendered = function() {
+      $(".select-people").bind("mousedown", function (e) {
+        e.metaKey = true;
+      }).selectable({
+        stop: function() {
+          var selectedPeople = [];
+          $(".ui-selected", this).each(function() {
+            var id = $(this).attr('id');
+            selectedPeople.push(id);
+          });
+          Session.set('selectedPeople',selectedPeople);
+        }
+      });
+}
+
 // revealInit = function() {
 //   Session.set('configLoaded',false);
 //   Session.set('configID', Config.findOne({})._id);
@@ -186,11 +201,13 @@ Template.button_panel.events({
   'click .button-panel .select-people-button': function(event) {
     var self = $(event.target);
     self.toggleClass('enabled');
-    if (self.hasClass('enabled')) {
-      $('.select-people').css('display','none');
-    } else {
-      $('.select-people').css('display','block');
-    }
+    $('.select-people').toggleClass('enabled');
+    // if (self.hasClass('enabled')) {
+    //   $('.select-people').css('display','none');
+    // } else {
+    //   $('.select-people').css('display','block');
+    // }
+
     // $('.select-people').toggle();
   }
     // if (event.target.)
@@ -278,11 +295,11 @@ revealArgRendered = function() {
   initializeButtonPanel();
   console.log("The value of revealReady is "+Session.get('revealReady'));
   if (!Session.get("revealReady")) {
-    if (Session.get('slideDeck')==='selectedPeople') {
-      $('.select-people').css('display','block');
-    } else {
-      $('.select-people').css('display','none');
-    }
+    // if (Session.get('slideDeck')==='selectedPeople') {
+    //   $('.select-people').css('display','block');
+    // } else {
+    //   $('.select-people').css('display','none');
+    // }
     console.log("revealReady was false.");
     $(function() {
       console.log("inside the reveal-created jquery ready function.");
