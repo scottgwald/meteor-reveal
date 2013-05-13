@@ -9,6 +9,7 @@ defaultConfig = function (userId) {
 getOrCreateSlideId = function (userId) {
   var slideId;
   var mySlides = Slides.find({owner:userId});
+  console.log("Evaluating getOrCreateSlideId.");
   if (mySlides.count()===0) {
     slideId = Slides.insert(defaultSlide(userId));
   } else {
@@ -22,6 +23,7 @@ slideIsValid = function(slide) {
     console.log("slide is undefined.");
     return false;
   }
+  console.log("Evaluating slideIsValid.");
   // check: slide has valid owner
   if (slide.hasOwnProperty('owner')) {
     if (!userExists(slide.owner)) {
@@ -74,6 +76,7 @@ slideExistsAndValid = function (slideId) {
   if (curs.count() === 0) {
     return false;
   }
+  console.log("Evaluating slideExistsAndValid.");
   if (slideIsValid(curs.fetch()[0])) {
     return true;
   } else {
