@@ -163,12 +163,18 @@ Meteor.publish("all-users-current-slides", function () {
 
 function listImages() {
   console.log("Evaluating listImages.");
-  var bareNames = fs.readdirSync("public/img");
+  // var bareNames = fs.readdirSync("bundle/static/img");
+  var bareNames = fs.readdirSync(Meteor.settings.staticFilePrefix + "img");
   var patt=/\.jpg$/;
   bareNames = _.filter(bareNames, function(bareName){return patt.test(bareName)});
   var fullNames = _.map(bareNames, function(bareName) {return "url(/img/"+bareName+")"});
   console.log("Came out with "+fullNames.length+" images.");
   return fullNames;
+}
+
+function listAnything(path) {
+  console.log("Evaluating listAnything.");
+  return fs.readdirSync(Meteor.settings.staticFilePrefix+path);
 }
 
 function migrateToOrder() {
@@ -385,6 +391,9 @@ Meteor.methods({
   },
   listImages: function () {
     return listImages();
+  },
+  listAnything: function (path) {
+    return listAnything(path);
   }
 });
 
