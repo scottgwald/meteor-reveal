@@ -15,6 +15,9 @@ Session.set('notFoundId', "xxxx");
 Session.set('notFoundInd', 9999);
 Session.set('notFoundText', "No slide here!");
 Session.set('currentSlide',Session.get('notFoundId'));
+Session.set('backgroundImage','url(/img/mexi-fresco.jpg)');
+Meteor.call('listImages',function(err,data) {Session.set('backgroundImages',data)});
+Session.set('backgroundImageIndex',0);
 //Session.set('panelIndex',0);
 
 Deps.autorun(function () {
@@ -30,8 +33,8 @@ Deps.autorun(function () {
     // Session.set('configLoaded',false); //done at the top.
     Meteor.subscribe('configForUser', function onComplete() {
       var configId = getOrCreateConfigId(Meteor.userId()); // any good reason to pass it in?
-      // TODO TODO TODO: replace all occurrences of configID with configId, for consistency.
-      Session.set('configID',configId);
+      // TODO TODO TODO: replace all occurrences of configId with configId, for consistency.
+      Session.set('configId',configId);
       Session.set('configLoaded',true);
       // revealInit();
       Meteor.subscribe('all-users-current-slides');
@@ -39,7 +42,7 @@ Deps.autorun(function () {
   } else {
     // upon logout
     Session.set("configLoaded",false);
-    Session.set("configID",undefined);
+    Session.set("configId",undefined);
   }
 });
 
@@ -93,25 +96,25 @@ Meteor.Router.add({
 nextSlide = function() {
   // TODO check in bounds
   var newId = slideId(currentSlideInd()+1);
-  // Config.update(Session.get('configID'),{$inc: {n:1}});
-  Config.update(Session.get('configID'),{$set: {id:newId}});
+  // Config.update(Session.get('configId'),{$inc: {n:1}});
+  Config.update(Session.get('configId'),{$set: {id:newId}});
   return currentSlideInd();
 }
 
 previousSlide = function() {
   // TODO check in bounds
   var newId = slideId(currentSlideInd()-1);
-  // Config.update(Session.get('configID'),{$inc: {n:-1}});
-  Config.update(Session.get('configID'),{$set: {id:newId}});
+  // Config.update(Session.get('configId'),{$inc: {n:-1}});
+  Config.update(Session.get('configId'),{$set: {id:newId}});
   return currentSlideInd();
 }
 
 gotoSlide = function(ind) {
-  Config.update(Session.get('configID'), {$set: {n:ind+1}});
+  Config.update(Session.get('configId'), {$set: {n:ind+1}});
 }
 
 gotoSlideId = function(theId) {
-  Config.update(Session.get('configID'), {$set: {id:theId}});
+  Config.update(Session.get('configId'), {$set: {id:theId}});
 }
 
 currentSlide = function() {
@@ -121,7 +124,7 @@ currentSlide = function() {
   }  else {
     console.log("config loaded."); 
     // use id instead to avoid undefined in transient state?
-    return Config.findOne(Session.get('configID')).n; 
+    return Config.findOne(Session.get('configId')).n; 
   }
 };
 
@@ -132,7 +135,7 @@ getShowingSlideId = function() {
   }  else {
     console.log("config loaded."); 
     // use id instead to avoid undefined in transient state?
-    return Config.findOne(Session.get('configID')).id;
+    return Config.findOne(Session.get('configId')).id;
   }
 };
 

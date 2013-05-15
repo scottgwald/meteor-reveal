@@ -40,7 +40,13 @@
 }
 
 .reveal {
-  background-image: url(/cute_cat_picture.jpg);
+  background-image: url(/outer-space.jpg);
+}
+
+.reveal .slides section {
+  display:-webkit-box;
+  -webkit-box-pack:center;
+  -webkit-box-align:center;
 }
 
 /*********************************************

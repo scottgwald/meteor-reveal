@@ -147,6 +147,7 @@ var Reveal = (function(){
 	 * Starts up the presentation if the client is capable.
 	 */
 	function initialize( options ) {
+		console.log("Reveeeeeeeeeal. Initializing.");
 
 		if( !supports2DTransforms && !supports3DTransforms ) {
 			document.body.setAttribute( 'class', 'no-transforms' );
@@ -1276,7 +1277,8 @@ var Reveal = (function(){
 					// and last slides
 					var distance = Math.abs( ( index - i ) % ( slidesLength - 3 ) ) || 0;
 
-					element.style.display = distance > 3 ? 'none' : 'block';
+					element.style.display = distance > 3 ? 'none' : '-webkit-box';
+					// element.style.display = distance > 3 ? 'none' : 'block';
 				}
 
 				slides[i].classList.remove( 'past' );

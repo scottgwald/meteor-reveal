@@ -1,5 +1,6 @@
 <template name="reveal">
   {{> current_slide}}
+  <input id="autoSlide" type="hidden" value="{{autoSlide}}">  
   <link rel="stylesheet" href="css/reveal.min.css">
   <link rel="stylesheet" href="css/theme/default.css" id="theme">
   <!-- For syntax highlighting -->
@@ -29,7 +30,10 @@
 </template>
 
 <template name="reveal_arg">
-  <input id="autoSlide" type="hidden" value="{{autoSlide}}"> 
+  <input id="autoSlide" type="hidden" value="{{autoSlide}}">  
+  {{#isolate}}
+    <input id="background-image" type="hidden" value="{{backgroundImage}}">
+  {{/isolate}}
   <link rel="stylesheet" href="css/reveal.min.css">
   <link rel="stylesheet" href="css/theme/default.css" id="theme">
   <!-- For syntax highlighting -->
@@ -97,16 +101,22 @@
 </template>
 
 <template name="reveal_slide">
-  <section>
+  <section style="display: -webkit-box; width: 100%; height: 100%; background-image: {{slideBackground}}">
     <h1>{{text}}</h1>
   </section>
 </template>
 
 <template name="reveal_arg_slide">
-  <section>
-    <h1>{{text}}</h1>
-    <h3>{{user}}</h3>
+  <section style="width: 100%; height: 100%; background-image: {{slideBackground}}">
+    <div>
+      <h1>{{text}}</h1>
+      <h3>{{user}}</h3>
+    </div>
   </section>
+</template>
+
+<template name="current_background">
+  <input id="background-image" type="hidden" value="{{backgroundImage}}">
 </template>
 
 <template name="current_slide">

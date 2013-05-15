@@ -1,3 +1,5 @@
+var fs = Npm.require('fs');
+
 // Lists -- {name: String}
 Slides = new Meteor.Collection("slides");
 Config = new Meteor.Collection("config");
@@ -157,7 +159,17 @@ Meteor.publish("all-users-current-slides", function () {
   });
 });
 
-// Config.findOne(Session.get('configID')).id;
+// Config.findOne(Session.get('configId')).id;
+
+function listImages() {
+  console.log("Evaluating listImages.");
+  var bareNames = fs.readdirSync("public/img");
+  var patt=/\.jpg$/;
+  bareNames = _.filter(bareNames, function(bareName){return patt.test(bareName)});
+  var fullNames = _.map(bareNames, function(bareName) {return "url(/img/"+bareName+")"});
+  console.log("Came out with "+fullNames.length+" images.");
+  return fullNames;
+}
 
 function migrateToOrder() {
   var cur = Slides.find({},{sort: {ind:1}});
@@ -370,6 +382,9 @@ Meteor.methods({
   },
   pruneMalformedConfigs: function () {
     pruneMalformedConfigs();
+  },
+  listImages: function () {
+    return listImages();
   }
 });
 
